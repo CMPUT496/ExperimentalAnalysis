@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import division
 """
 Created on Wed Oct 29 19:51:48 2014
 
@@ -8,7 +9,6 @@ Created on Wed Oct 29 19:51:48 2014
 
 """It is in python 2.7 and so make sure to use print as a function during compiling"""
 
-from __future__ import division
 
 from numpy import *
 from random import *
@@ -69,6 +69,8 @@ def Problem_extract(data,train_n,test_n):
 
 def similarity(arm,test):
 #cosine similarity measure function
+    print "Dot:\n"
+    print (dot(arm, test.T))
     return dot(arm, test.T) / (linalg.norm(arm) * linalg.norm(test.T, axis=0))
 
 
@@ -103,5 +105,6 @@ def reward(arm,test,r_param):
 arm = array([1,4,6])
 test = array([[1,2,100],[1,2,6],[5,0,2]])
 sim = similarity(arm,test)
+print sim 
 print sim[1]
 print similarity(arm,test)
