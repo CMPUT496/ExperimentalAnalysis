@@ -12,27 +12,27 @@ import numpy
 import random
 
 class LineConfig():
-    def __init__():
-        ticks = random.randint(0,2)
-        fractions = random.randint(0,5)
-        hints = random.randint(0,1)
-        target_rep = random.randint(0,1)
-        label_rep = random.randint(0,1)  
+    def __init__(self):
+        self.ticks = random.randint(0,2)
+        self.fractions = random.randint(0,5)
+        self.hints = random.randint(0,1)
+        self.target_rep = random.randint(0,1)
+        self.label_rep = random.randint(0,1)  
 
-    def getTicks():
-        return this.ticks
+    def getTicks(self):
+        return self.ticks
 
-    def getFractions():
-        return this.fractions
+    def getFractions(self):
+        return self.fractions
 
-    def getHints():
-        return this.hints
+    def getHints(self):
+        return self.hints
 
-    def getTarget():
-        return this.target_rep
+    def getTarget(self):
+        return self.target_rep
 
-    def getLabel():
-        return this.label_rep
+    def getLabel(self):
+        return self.label_rep
 
 def distance(config, student):
     # calculate distance
@@ -46,6 +46,12 @@ def probability(distance):
 
 def getStudent():
     # randomly returns a student config vector
+    student = LineConfig()
+    print student.getTicks() 
+    print student.getFractions() 
+    print student.getHints() 
+    print student.getLabel() 
+    print student.getTarget()
     return student
 
 def log_results(student, question, attempt):
@@ -59,5 +65,6 @@ def simulate(config):
     log_results(student, question, attempt)
     return reward
  
+getStudent()
 
 
