@@ -79,4 +79,5 @@ def simulate(config):
     prob = probability(dist)
     rew = reward(prob)
     # log_results(student, question, attempt)
+    print "Reward: %d" %(rew)
     return rew
