@@ -17,7 +17,7 @@ class LineConfig():
         self.fractions = random.randint(0,5)
         self.hints = random.randint(0,1)
         self.target_rep = random.randint(0,1)
-        self.label_rep = random.randint(0,1)  
+        self.label_rep = random.randint(0,1)
 
     def getTicks(self):
         return self.ticks
@@ -36,21 +36,24 @@ class LineConfig():
 
 def distance(config, student):
     # calculate distance
-    return distance
+    dist = random.randrange(0,10)
+    print "Distance: %f" %(dist)
+    return dist
 
-def probability(distance):
+def probability(dist):
     # calculate probability of success based on distance
     # this is the distribution function
-    probability = e^(-distance)
-    return probability
+    prob = numpy.exp(0-dist)
+    print "Probability: %f" %(prob)
+    return prob
 
 def getStudent():
     # randomly returns a student config vector
     student = LineConfig()
-    print student.getTicks() 
-    print student.getFractions() 
-    print student.getHints() 
-    print student.getLabel() 
+    print student.getTicks()
+    print student.getFractions()
+    print student.getHints()
+    print student.getLabel()
     print student.getTarget()
     return student
 
@@ -60,11 +63,7 @@ def log_results(student, question, attempt):
 def simulate(config):
     student = getStudent()
     dist = distance(config, student)
-    prob = probability(distance)
+    prob = probability(dist)
     reward = rewardBasedOnProb(prob)
     log_results(student, question, attempt)
     return reward
- 
-getStudent()
-
-
