@@ -22,7 +22,7 @@ class LineConfig():
     def getTicks(self):
         return self.ticks
 
-    def getFractions(self):
+    def getFraction(self):
         return self.fractions
 
     def getHints(self):
@@ -34,9 +34,14 @@ class LineConfig():
     def getLabel(self):
         return self.label_rep
 
-def distance(config, student):
+def distance(arm, student):
     # calculate distance
-    dist = random.randrange(0,10)
+    dist = 0.0    # offset
+    dist += 0.1 * (numpy.absolute(arm.getTicks() - student.getTicks()))
+    dist += 0.08 * (numpy.absolute(arm.getFraction() - student.getFraction()))
+    dist += 0.05 * (numpy.absolute(arm.getHints() - student.getHints()))
+    dist += 0.5 * (numpy.absolute(arm.getTarget() - student.getTarget()))
+    dist += 0.5 * (numpy.absolute(arm.getLabel() - student.getLabel()))
     print "Distance: %f" %(dist)
     return dist
 
@@ -47,23 +52,31 @@ def probability(dist):
     print "Probability: %f" %(prob)
     return prob
 
+def reward(prob):
+    if random.random() <= prob:
+        return 1    # pass
+    else:
+        return 0    # fail
+
 def getStudent():
     # randomly returns a student config vector
     student = LineConfig()
-    print student.getTicks()
-    print student.getFractions()
-    print student.getHints()
-    print student.getLabel()
-    print student.getTarget()
+    print "Student: <%d, %d, %d, %d, %d>" %(student.getTicks(),
+            student.getFraction(), student.getHints(), student.getLabel(),
+            student.getTarget())
     return student
 
 def log_results(student, question, attempt):
     return
 
 def simulate(config):
+    arm = LineConfig()
+    print "ARM:     <%d, %d, %d, %d, %d>" %(arm.getTicks(),
+            arm.getFraction(), arm.getHints(), arm.getLabel(),
+            arm.getTarget())
     student = getStudent()
-    dist = distance(config, student)
+    dist = distance(arm, student)
     prob = probability(dist)
-    reward = rewardBasedOnProb(prob)
-    log_results(student, question, attempt)
-    return reward
+    rew = reward(prob)
+    # log_results(student, question, attempt)
+    return rew
