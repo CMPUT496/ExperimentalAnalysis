@@ -60,6 +60,35 @@ def reward(prob):
 
 def getStudent():
     # randomly returns a student config vector
+    # generate ticks
+    ticks = numpy.random.normal(1, 1)
+    if ticks >= 2:
+        ticks = 2
+    elif ticks <= 0:
+        ticks = 0
+    else:
+        ticks = 1
+
+    # generate fractions
+    fractions = numpy.random.randint(0, 6)
+
+    # gemerate hints
+    hints = 0
+    if (random.random() <= 0.3):
+        hints = 1
+
+    # gemerate hints
+    target = 0
+    if (random.random() <= 0.5):
+        target = 1
+
+    # gemerate hints
+    label = 0
+    if (random.random() <= 0.5):
+        label = 1
+
+    s = numpy.array([ticks, fractions, hints, target, label])
+
     student = LineConfig()
     print "Student: <%d, %d, %d, %d, %d>" %(student.getTicks(),
             student.getFraction(), student.getHints(), student.getLabel(),
