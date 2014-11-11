@@ -1,32 +1,7 @@
 import math
 import numpy
-
-class sampleArm():
-
-    # as of right now I am assuming an arm is represented by a numpy array
-    def __init__(self, arm):
-        self.arm = arm
-        self.total_reward = 0
-        self.average = 0
-
-    def get_arm():
-        return arm
-
-    def set_arm(self, arm):
-        self.arm = arm
-
-    def get_total_reward():
-        return total_reward
-
-    def set_total_reward(self, total_reward):
-        self.total_reward = total_reward
-
-    def get_average():
-        return average
-
-    def set_average(self, average):
-        self.average = average
-
+import sample_arm
+import sim
 
 def sequential_halving(arms, bound):
     """
@@ -43,7 +18,7 @@ def sequential_halving(arms, bound):
     # add arms with initialized values to the list
     for i in range(len(arms)):
         a = list()
-        arm = new sampleArm(arms[i])
+        arm = sample_arm.sampleArm(arms[i])
         a.append(arm)
     s.append(a)
 
@@ -60,7 +35,7 @@ def sequential_halving(arms, bound):
             for j in range(pulls_per_arm):
 
                 # sample arm i from remaining arms pulls_per_arm times
-                total += sample(s[r][i])
+                total += sim.simulate(s[r][i].getArm())
             s[r][i].setAverage(total/pulls_per_arm)
 
         # sort the remaining arms by average from above sample
