@@ -65,16 +65,16 @@ class Student(LineConfig):
 
     def get_name(self):
         return self.name
-        
+
 
 def distance(arm, student):
     # calculate distance
     dist = 0.0    # offset
-    dist += 0.1 * (numpy.absolute(arm.getTicks() - student.getTicks()))
+    dist += 0.1 * (numpy.absolute(arm.get_ticks() - student.get_ticks()))
     # dist += 0.08 * (numpy.absolute(arm.getFraction() - student.getFraction()))
-    dist += 0.05 * (numpy.absolute(arm.getHints() - student.getHints()))
-    dist += 0.5 * (numpy.absolute(arm.getTarget() - student.getTarget()))
-    dist += 0.5 * (numpy.absolute(arm.getLabel() - student.getLabel()))
+    dist += 0.05 * (numpy.absolute(arm.get_hints() - student.get_hints()))
+    dist += 0.5 * (numpy.absolute(arm.get_target() - student.get_target()))
+    dist += 0.5 * (numpy.absolute(arm.get_label() - student.get_label()))
     print "Distance: %f" %(dist)
     return dist
 
@@ -90,14 +90,6 @@ def reward(prob):
         return 1    # pass
     else:
         return 0    # fail
-
-# def getStudent():
-#     # randomly returns a student config vector
-#     student = LineConfig()
-#     print "Student: <%d, %d, %d, %d, %d>" %(student.getTicks(),
-#             student.getFraction(), student.getHints(), student.getLabel(),
-#             student.getTarget())
-#     return student
 
 def getStudent():
     # Picks a type of student based on same probability
@@ -120,17 +112,13 @@ def log_results(student, probability, result):
         res = "PASS"
     else:
         res = "FAIL"
-    log = "%s, lambda:%f <%d, %d, %d, %d>, %d\%, %s", %(student.get_name(), student.get_lambda, student.get_ticks(), student.get_hints(), student.get_target(), student.get_label, res)
-    return
+    log = "%s, lambda:%f <%d, %d, %d, %d>, %d\%, %s" %(student.get_name(), student.get_lambda, student.get_ticks(), student.get_hints(), student.get_target(), student.get_label, res)
 
 def simulate(config):
     arm = LineConfig()
-    print "ARM:     <%d, %d, %d, %d, %d>" %(arm.getTicks(),
-            arm.getFraction(), arm.getHints(), arm.getLabel(),
-            arm.getTarget())
     student = getStudent()
     dist = distance(arm, student)
     prob = probability(dist)
     rew = reward(prob)
-    # log_results(student, prob, result)
+    log_results(student, prob, result)
     return rew
