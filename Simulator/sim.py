@@ -11,34 +11,36 @@
 import numpy
 import random
 
+logFile = open("LogFile.txt", "w")
+
 class LineConfig():
     def __init__(self):
         self.ticks = random.randint(0,2)
-        self.fractions = random.randint(0,5)
+        #self.fractions = random.randint(0,5)
         self.hints = random.randint(0,1)
         self.target_rep = random.randint(0,1)
         self.label_rep = random.randint(0,1)
 
-    def getTicks(self):
+    def get_ticks(self):
         return self.ticks
 
-    def getFraction(self):
-        return self.fractions
+    # def getFraction(self):
+    #     return self.fractions
 
-    def getHints(self):
+    def get_hints(self):
         return self.hints
 
-    def getTarget(self):
+    def get_target(self):
         return self.target_rep
 
-    def getLabel(self):
+    def get_label(self):
         return self.label_rep
 
 def distance(arm, student):
     # calculate distance
     dist = 0.0    # offset
     dist += 0.1 * (numpy.absolute(arm.getTicks() - student.getTicks()))
-    dist += 0.08 * (numpy.absolute(arm.getFraction() - student.getFraction()))
+    # dist += 0.08 * (numpy.absolute(arm.getFraction() - student.getFraction()))
     dist += 0.05 * (numpy.absolute(arm.getHints() - student.getHints()))
     dist += 0.5 * (numpy.absolute(arm.getTarget() - student.getTarget()))
     dist += 0.5 * (numpy.absolute(arm.getLabel() - student.getLabel()))
@@ -58,15 +60,36 @@ def reward(prob):
     else:
         return 0    # fail
 
+# def getStudent():
+#     # randomly returns a student config vector
+#     student = LineConfig()
+#     print "Student: <%d, %d, %d, %d, %d>" %(student.getTicks(),
+#             student.getFraction(), student.getHints(), student.getLabel(),
+#             student.getTarget())
+#     return student
+
 def getStudent():
-    # randomly returns a student config vector
-    student = LineConfig()
-    print "Student: <%d, %d, %d, %d, %d>" %(student.getTicks(),
-            student.getFraction(), student.getHints(), student.getLabel(),
-            student.getTarget())
+    # Picks a type of student based on same probability
+    # 20%: visual, 40%: non-visual, 20%: independant, 20%: dependant
+    studType = random.randint(0,9)
+    if(studType < 2): 
+        student = Student(random.randint(0,2), 0, 0, 0, "Visual") # Visual
+    elif(studType <= 5):
+        student = Student(0, random.randint(0,1), 1, 1, "Non-visual") # Non-visual
+    elif(studType <= 7):
+        student = Student(2, 0, random.randint(0,1), 0, "Indepentant") # Indepentant
+    else:
+        student = Student(1, 1, 1, random.randint(0,1), "Dependant") # Dependant
+
     return student
 
-def log_results(student, question, attempt):
+
+def log_results(student, probability, result):
+    if(resust == 1):
+        res = "PASS"
+    else:
+        res = "FAIL"
+    log = "%s, lambda:%f <%d, %d, %d, %d>, %d\%, %s", %(student.get_name(), student.get_lambda, student.get_ticks(), student.get_hints(), student.get_target(), student.get_label, res)
     return
 
 def simulate(config):
@@ -78,5 +101,6 @@ def simulate(config):
     dist = distance(arm, student)
     prob = probability(dist)
     rew = reward(prob)
-    # log_results(student, question, attempt)
+    # log_results(student, probability, result)
     return rew
+
