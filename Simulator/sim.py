@@ -10,6 +10,7 @@
 
 import numpy
 import random
+import pdb
 
 logFile = open("LogFile.txt", "w")
 
@@ -26,9 +27,10 @@ class LineConfig():
 
     def __init__(self, ticks, hints, target, label):
         self.ticks = ticks
-        self.fractions = fractions
+        #self.fractions = fractions
         self.hints = hints
         self.target = target
+        self.label = label
 
     def get_ticks(self):
         return self.ticks
@@ -40,10 +42,10 @@ class LineConfig():
         return self.hints
 
     def get_target(self):
-        return self.target_rep
+        return self.target
 
     def get_label(self):
-        return self.label_rep
+        return self.label
 
 
 class Student(LineConfig):
@@ -54,9 +56,9 @@ class Student(LineConfig):
 
     Student inherits from LineConfig
     """
-    def __init__(self, ticks, fractions, hints, target, label, name):
+    def __init__(self, ticks, hints, target, label, name):
         # call line_config
-        LineConfig.__init__(self, ticks, fractions, hints, target, label)
+        LineConfig.__init__(self, ticks, hints, target, label)
         self.s_lambda = numpy.random.normal(1, 0.1)
         self.name = name
 
@@ -108,18 +110,20 @@ def get_student():
     return student
 
 
-def log_results(student, probability, result):
-    if(resust == 1):
+def log_results(student, arm,  probability, result):
+    if(result == 1):
         res = "PASS"
     else:
         res = "FAIL"
-    log = "%s, lambda:%f <%d, %d, %d, %d>, %d\%, %s" %(student.get_name(), student.get_lambda, student.get_ticks(), student.get_hints(), student.get_target(), student.get_label, res)
+    pdb.set_trace()
+    log = "Student(%s): lambda:%.2f <%d, %d, %d, %d> -- arm: <%d, %d, %d, %d> -- %.2f\% -- %s\n" %(student.get_name(), student.get_lambda(), student.get_ticks(), student.get_hints(), student.get_target(), student.get_label(), arm.get_ticks(), arm.get_hints(), arm.get_target(), arm.get_label(), probability, res)
+    logFile.write(log)
 
 def simulate(config):
     arm = LineConfig(config[0], config[1], config[2], config[3])
-    student = getStudent()
+    student = get_student()
     dist = distance(arm, student)
     prob = probability(dist)
     rew = reward(prob)
-    log_results(student, prob, result)
+    log_results(student, arm, prob, rew)
     return rew
