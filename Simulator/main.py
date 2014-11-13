@@ -1,8 +1,14 @@
 import sim
 
 def main():
-	sim.simulate()
-	return
+    cFile = open("configs.txt", "r")
+    configs = []
+    for line in cFile:
+        configs = [int(n) for n in line.split()]
+        sim.simulate(configs)
+    return
 
 if __name__=="__main__":
 	main()
+
+
