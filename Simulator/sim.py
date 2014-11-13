@@ -110,13 +110,13 @@ def get_student():
     return student
 
 
-def log_results(student, arm,  probability, result):
+def log_results(student, arm,  prob, result):
     if(result == 1):
         res = "PASS"
     else:
         res = "FAIL"
-    pdb.set_trace()
-    log = "Student(%s): lambda:%.2f <%d, %d, %d, %d> -- arm: <%d, %d, %d, %d> -- %.2f\% -- %s\n" %(student.get_name(), student.get_lambda(), student.get_ticks(), student.get_hints(), student.get_target(), student.get_label(), arm.get_ticks(), arm.get_hints(), arm.get_target(), arm.get_label(), probability, res)
+    #pdb.set_trace()
+    log = "Student(%s): lambda:%.2f <%d, %d, %d, %d> -- arm: <%d, %d, %d, %d> -- %.2f -- %s\n" %(student.get_name(), student.get_lambda(), student.get_ticks(), student.get_hints(), student.get_target(), student.get_label(), arm.get_ticks(), arm.get_hints(), arm.get_target(), arm.get_label(), prob, res)
     logFile.write(log)
 
 def simulate(config):
