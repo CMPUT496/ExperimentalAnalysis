@@ -12,12 +12,27 @@ import numpy
 import random
 
 class LineConfig():
-    def __init__(self):
-        self.ticks = random.randint(0,2)
-        self.fractions = random.randint(0,5)
-        self.hints = random.randint(0,1)
-        self.target_rep = random.randint(0,1)
-        self.label_rep = random.randint(0,1)
+    """
+    LineConfig is a representation of a number line configuration.
+
+    Variables:
+        ticks: [0, 2] represents the number of ticks on the number line
+        fractison: [0, 5] represents the difficulty of fractions
+        hints: [0, 1] boolean, represents if there are hints or not
+        target: [0, 1] represents target representation (either pie chart or symbolic)
+        label: [0, 1] represents label representation (either pie chart or symbolic)
+    """
+
+    def __init__(self, ticks, fractions, hints, target, label):
+        self.ticks = ticks
+        self.fractions = fractions
+        self.hints = hints
+        self.target = target
+        #self.ticks = random.randint(0,2)
+        #self.fractions = random.randint(0,5)
+        #self.hints = random.randint(0,1)
+        #self.target_rep = random.randint(0,1)
+        #self.label_rep = random.randint(0,1)
 
     def getTicks(self):
         return self.ticks
@@ -29,10 +44,32 @@ class LineConfig():
         return self.hints
 
     def getTarget(self):
-        return self.target_rep
+        return self.target
 
     def getLabel(self):
-        return self.label_rep
+        return self.label
+
+
+class Student(LineConfig):
+    """
+    Student is a representation of student's preferred configuration,
+    a lambda representing how *good* a student is (inversely), and the name
+    of the type of student for logging purposes
+
+    Student inherits from LineConfig
+    """
+    def __init__(self, ticks, fractions, hints, target, label, name):
+        # call line_config
+        LineConfig.__init__(self, ticks, fractions, hints, target, label)
+        self.s_lambda = 0
+        self.name = name
+
+    def get_lambda(self):
+        return self.s_lambda
+
+    def get_name(self):
+        return self.name
+
 
 def distance(arm, student):
     # calculate distance
