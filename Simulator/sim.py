@@ -11,43 +11,39 @@
 import numpy
 import random
 
+logFile = open("LogFile.txt", "w")
+
 class LineConfig():
     """
     LineConfig is a representation of a number line configuration.
 
     Variables:
         ticks: [0, 2] represents the number of ticks on the number line
-        fractison: [0, 5] represents the difficulty of fractions
         hints: [0, 1] boolean, represents if there are hints or not
         target: [0, 1] represents target representation (either pie chart or symbolic)
         label: [0, 1] represents label representation (either pie chart or symbolic)
     """
 
-    def __init__(self, ticks, fractions, hints, target, label):
+    def __init__(self, ticks, hints, target, label):
         self.ticks = ticks
         self.fractions = fractions
         self.hints = hints
         self.target = target
-        #self.ticks = random.randint(0,2)
-        #self.fractions = random.randint(0,5)
-        #self.hints = random.randint(0,1)
-        #self.target_rep = random.randint(0,1)
-        #self.label_rep = random.randint(0,1)
 
-    def getTicks(self):
+    def get_ticks(self):
         return self.ticks
 
-    def getFraction(self):
-        return self.fractions
+    # def getFraction(self):
+    #     return self.fractions
 
-    def getHints(self):
+    def get_hints(self):
         return self.hints
 
-    def getTarget(self):
-        return self.target
+    def get_target(self):
+        return self.target_rep
 
-    def getLabel(self):
-        return self.label
+    def get_label(self):
+        return self.label_rep
 
 
 class Student(LineConfig):
@@ -69,13 +65,13 @@ class Student(LineConfig):
 
     def get_name(self):
         return self.name
-
+        
 
 def distance(arm, student):
     # calculate distance
     dist = 0.0    # offset
     dist += 0.1 * (numpy.absolute(arm.getTicks() - student.getTicks()))
-    dist += 0.08 * (numpy.absolute(arm.getFraction() - student.getFraction()))
+    # dist += 0.08 * (numpy.absolute(arm.getFraction() - student.getFraction()))
     dist += 0.05 * (numpy.absolute(arm.getHints() - student.getHints()))
     dist += 0.5 * (numpy.absolute(arm.getTarget() - student.getTarget()))
     dist += 0.5 * (numpy.absolute(arm.getLabel() - student.getLabel()))
@@ -95,44 +91,36 @@ def reward(prob):
     else:
         return 0    # fail
 
+# def getStudent():
+#     # randomly returns a student config vector
+#     student = LineConfig()
+#     print "Student: <%d, %d, %d, %d, %d>" %(student.getTicks(),
+#             student.getFraction(), student.getHints(), student.getLabel(),
+#             student.getTarget())
+#     return student
+
 def getStudent():
-    # randomly returns a student config vector
-    # generate ticks
-    ticks = numpy.random.normal(1, 1)
-    if ticks >= 2:
-        ticks = 2
-    elif ticks <= 0:
-        ticks = 0
+    # Picks a type of student based on same probability
+    # 20%: visual, 40%: non-visual, 20%: independant, 20%: dependant
+    studType = random.randint(0,9)
+    if(studType < 2):
+        student = Student(random.randint(0,2), 0, 0, 0, "Visual") # Visual
+    elif(studType <= 5):
+        student = Student(0, random.randint(0,1), 1, 1, "Non-visual") # Non-visual
+    elif(studType <= 7):
+        student = Student(2, 0, random.randint(0,1), 0, "Indepentant") # Indepentant
     else:
-        ticks = 1
+        student = Student(1, 1, 1, random.randint(0,1), "Dependant") # Dependant
 
-    # generate fractions
-    fractions = numpy.random.randint(0, 6)
-
-    # gemerate hints
-    hints = 0
-    if (random.random() <= 0.3):
-        hints = 1
-
-    # gemerate hints
-    target = 0
-    if (random.random() <= 0.5):
-        target = 1
-
-    # gemerate hints
-    label = 0
-    if (random.random() <= 0.5):
-        label = 1
-
-    s = numpy.array([ticks, fractions, hints, target, label])
-
-    student = LineConfig()
-    print "Student: <%d, %d, %d, %d, %d>" %(student.getTicks(),
-            student.getFraction(), student.getHints(), student.getLabel(),
-            student.getTarget())
     return student
 
-def log_results(student, question, attempt):
+
+def log_results(student, probability, result):
+    if(resust == 1):
+        res = "PASS"
+    else:
+        res = "FAIL"
+    log = "%s, lambda:%f <%d, %d, %d, %d>, %d\%, %s", %(student.get_name(), student.get_lambda, student.get_ticks(), student.get_hints(), student.get_target(), student.get_label, res)
     return
 
 def simulate(config):
@@ -144,6 +132,5 @@ def simulate(config):
     dist = distance(arm, student)
     prob = probability(dist)
     rew = reward(prob)
-    # log_results(student, question, attempt)
-    print "Reward: %d" %(rew)
+    # log_results(student, prob, result)
     return rew
