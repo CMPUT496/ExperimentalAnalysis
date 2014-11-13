@@ -1,7 +1,7 @@
 import sim
 
 def main():
-	sim.simulate([0,0,0,0])
+	sim.simulate()
 	return
 
 if __name__=="__main__":

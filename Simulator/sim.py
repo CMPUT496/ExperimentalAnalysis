@@ -10,7 +10,6 @@
 
 import numpy
 import random
-import pdb
 
 logFile = open("LogFile.txt", "w")
 
@@ -78,14 +77,14 @@ def distance(arm, student):
     dist += 0.5 * (numpy.absolute(arm.get_target() - student.get_target()))
     dist += 0.5 * (numpy.absolute(arm.get_label() - student.get_label()))
     dist *= student.get_lambda()
-    print "Distance: %f" %(dist)
+    #print "Distance: %f" %(dist)
     return dist
 
 def probability(dist):
     # calculate probability of success based on distance
     # this is the distribution function
     prob = numpy.exp(0-dist)
-    print "Probability: %f" %(prob)
+    #print "Probability: %f" %(prob)
     return prob
 
 def reward(prob):
@@ -115,8 +114,7 @@ def log_results(student, arm,  prob, result):
         res = "PASS"
     else:
         res = "FAIL"
-    #pdb.set_trace()
-    log = "Student(%s): lambda:%.2f <%d, %d, %d, %d> -- arm: <%d, %d, %d, %d> -- %.2f -- %s\n" %(student.get_name(), student.get_lambda(), student.get_ticks(), student.get_hints(), student.get_target(), student.get_label(), arm.get_ticks(), arm.get_hints(), arm.get_target(), arm.get_label(), prob, res)
+    log = "Student(%-11s):\t lambda:%.2f <%d, %d, %d, %d> \t  arm: <%d, %d, %d, %d>\t %.2f%s %s\n" %(student.get_name(), student.get_lambda(), student.get_ticks(), student.get_hints(), student.get_target(), student.get_label(), arm.get_ticks(), arm.get_hints(), arm.get_target(), arm.get_label(), probability, "%",res)
     logFile.write(log)
 
 def simulate(config):
