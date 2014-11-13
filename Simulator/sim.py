@@ -57,7 +57,7 @@ class Student(LineConfig):
     def __init__(self, ticks, fractions, hints, target, label, name):
         # call line_config
         LineConfig.__init__(self, ticks, fractions, hints, target, label)
-        self.s_lambda = 0
+        self.s_lambda = numpy.random.normal(1, 0.1)
         self.name = name
 
     def get_lambda(self):
@@ -75,6 +75,7 @@ def distance(arm, student):
     dist += 0.05 * (numpy.absolute(arm.get_hints() - student.get_hints()))
     dist += 0.5 * (numpy.absolute(arm.get_target() - student.get_target()))
     dist += 0.5 * (numpy.absolute(arm.get_label() - student.get_label()))
+    dist *= student.get_lambda()
     print "Distance: %f" %(dist)
     return dist
 
@@ -91,7 +92,7 @@ def reward(prob):
     else:
         return 0    # fail
 
-def getStudent():
+def get_student():
     # Picks a type of student based on same probability
     # 20%: visual, 40%: non-visual, 20%: independant, 20%: dependant
     studType = random.randint(0,9)
@@ -115,7 +116,7 @@ def log_results(student, probability, result):
     log = "%s, lambda:%f <%d, %d, %d, %d>, %d\%, %s" %(student.get_name(), student.get_lambda, student.get_ticks(), student.get_hints(), student.get_target(), student.get_label, res)
 
 def simulate(config):
-    arm = LineConfig()
+    arm = LineConfig(config[0], config[1], config[2], config[3])
     student = getStudent()
     dist = distance(arm, student)
     prob = probability(dist)
