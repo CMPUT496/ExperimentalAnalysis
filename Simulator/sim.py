@@ -101,6 +101,11 @@ def simulate(config):
     dist = distance(arm, student)
     prob = probability(dist)
     rew = reward(prob)
+<<<<<<< HEAD
     # log_results(student, probability, result)
+=======
+    # log_results(student, question, attempt)
+    print "Reward: %d" %(rew)
+>>>>>>> cce53e1541baaba3c27b04d2ad73ceac08e92281
     return rew
 
