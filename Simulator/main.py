@@ -10,7 +10,9 @@ def main():
 		config = numpy.asarray([int(n) for n in line.split()])
 		configs.append(config)
 
-	egreedy.epsilon_greedy(configs, 1000, 0.05)
+	best_arm = egreedy.epsilon_greedy(configs, 1000, 0.05)
+	print("BEST ARM:")
+	print(best_arm)
 	#sequential_halving.sequential_halving(configs, 10000)
 
 if __name__=="__main__":

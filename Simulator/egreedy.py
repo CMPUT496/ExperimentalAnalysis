@@ -43,6 +43,6 @@ def epsilon_greedy(arms, bound, epsilon):
 		# sort the arms
 		s.sort(key=operator.attrgetter('average'))
 
-
 	# return the best arm
+	print(s)
 	return s[0].get_arm()
