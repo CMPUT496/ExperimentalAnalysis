@@ -41,7 +41,7 @@ def epsilon_greedy(arms, bound, epsilon):
 				s[j].get_total_reward() / s[j].get_num_pulls())
 
 		# sort the arms
-		s.sort(key=operator.attrgetter('average'))
+		s.sort(key=operator.attrgetter('average'), reverse=True)
 
 	# return the best arm
 	for arm in s:
