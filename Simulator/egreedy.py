@@ -44,5 +44,6 @@ def epsilon_greedy(arms, bound, epsilon):
 		s.sort(key=operator.attrgetter('average'))
 
 	# return the best arm
-	print(s)
+	for arm in s:
+		print(arm.get_average())
 	return s[0].get_arm()
