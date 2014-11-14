@@ -2,6 +2,7 @@ import numpy
 import random
 import sample_arm
 import sim
+import operator
 
 def pick_arm(arms, epsilon):
 	# 1 - epsilon percent of the time choose greedily
@@ -12,11 +13,6 @@ def pick_arm(arms, epsilon):
 	else:
 		# choose randomly
 		return random.randint(0, len(arms) - 1)
-
-def sort_arms(arms):
-	# sorts the list of arms in decreasing order
-	sorted_arms = arms.sort(key=lambda x: x.get_average, reverse=True)
-	return sorted_arms
 
 def epsilon_greedy(arms, bound, epsilon):
 	"""
@@ -43,9 +39,10 @@ def epsilon_greedy(arms, bound, epsilon):
 				s[j].get_total_reward() + reward)
 		s[j].set_average(
 				s[j].get_total_reward() / s[j].get_num_pulls())
-				
+
 		# sort the arms
-		s = sort_arms[s]
-	
+		s.sort(key=operator.attrgetter('average'))
+
+
 	# return the best arm
 	return s[0].get_arm()
