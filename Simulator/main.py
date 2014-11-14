@@ -5,10 +5,8 @@ def main():
     configs = []
     for line in cFile:
         configs = [int(n) for n in line.split()]
-        sim.simulate(configs)
+        sim.simulate(configs)	
     return
 
 if __name__=="__main__":
 	main()
-
-
