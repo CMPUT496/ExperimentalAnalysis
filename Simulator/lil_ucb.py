@@ -4,7 +4,9 @@ import sample_arm
 import sim
 import math
 
-def lil_ucb(arms, confidence, epsilon, lambda, beta, sigma):
+def lil_ucb(arms, delta, epsilon, lambda_p, beta, sigma):
+    # delta == confidence
+    # 
     time = 0
     n = len(arms)
     mu = numpy.zeros(n) # set of rewards
@@ -13,50 +15,45 @@ def lil_ucb(arms, confidence, epsilon, lambda, beta, sigma):
 
     for arm in arms:
         s_arm = sample_arm.SampleArm(arm)
-        s.append(s_arm)
+        armList.append(s_arm)
 
     #sample each of the n arms once, set T_i(t) = 1, for all i and set t=n
     for i in range(n):
-        timestep += 1
         T[i] = 1
-        mu[i] = sim.simulate(armList[i])
+        mu[i] = sim.simulate(armList[i]) #pull the arm
+
+    timestep = n
+
+    while True:
+        counter = 0
+        done = False
+        total_pulls = sum(T)
+        timestep += 1
+
+        for i in range(n):
+            #check if an arm has been pulled more than all others combined
+            if T[i] > 1 + lambda_p*(total_pulls - T[i]): 
+                done = True
+                break
+
+        if done:
+            break
+
+        index = 0
+        upper_bound_value = 0
+
+        for i in range(n):
+            #temp is that magic value used to determine the best, next arm to pull
+            temp = math.sqrt((2*sigma**2 * (1 + epsilon) * math.log( math.log((1 + epsilon)* T[i])/delta))/T[i])
+            temp = mu[i] + (1 + beta)*(1 + math.sqrt(epsilon))*temp
+
+            if(temp > upper_bound_value):
+                upper_bound_value = temp
+                index = i
 
 
+        T[index] += 1
+        reward = sim.simulate(armList[index])
+        mu[index] = ((T[index]-1)*mu[index] + reward) / T[index] #average the rewards
 
-# def lil_UCB(arms,delta=1,epsilon=1,lambda=1,beta=1,sigma=1):
-#     timestep=0
-#     n=len(arms)
-#     mu=zeros(n)
-#     T=zeros(n)
-#     for i in range(0,n):
-#         timestep=timestep+1
-#         T[i]=T[i]+1
-#         r=reward(arm[i],timestep,T,i)
-#         mu[i]=r
-
-
-#     while True:
-
-#         counter=0
-
-#         for i in range(0,n):
-#             if T[i]<1+lambda*(sum(T)-T[i]):
-#                 counter=counter+1
-
-#         if counter!=n:
-#             break
-
-#         timestep=timestep+1
-
-#         upper_bound=zeros(n)
-#         # for j in range(0,n):
-
-#         # upper_bound[j]=mu[j] + (1+beta)*(1+sqrt(epsilon))*sqrt((2*(sigma**2)*(1+epsilon)*math.log((math.log((1+epsilon)*T[j]))/delta))/T[j])
-#         upper_bound=mu + (1+beta)*(1+sqrt(epsilon))*sqrt((2*(sigma**2)*(1+epsilon)*math.log((math.log((1+epsilon)*T))/delta))/T)
-
-#         index=upper_bound.argmax()
-#         T[index]=T[index]+1
-#         r=reward(arm[index],timestep,T,index)
-#         mu[index]=( (T[index]-1)*mu[index] + r)/T[index]
-
-#     return arms[T.argmax()]
+    return armList[T.argmax()]
