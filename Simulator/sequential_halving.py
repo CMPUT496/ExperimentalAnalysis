@@ -33,8 +33,7 @@ def sequential_halving(arms, bound):
         total = 0
         for i in range(len(s[r])):
             for j in range(pulls_per_arm):
-                # sample arm i from remaining arms pulls_per_arm times
-                total += sim.simulate(s[r][i].get_arm())
+                total += simulate(s[r][i].get_arm())
 
             s[r][i].set_average(total/pulls_per_arm)
 
