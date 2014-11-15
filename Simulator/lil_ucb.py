@@ -20,7 +20,7 @@ def lil_ucb(arms, delta, epsilon, lambda_p, beta, sigma):
     #sample each of the n arms once, set T_i(t) = 1, for all i and set t=n
     for i in range(n):
         T[i] = 1
-        mu[i] = sim.simulate(armList[i]) #pull the arm
+        mu[i] = sim.simulate(armList[i].get_arm()) #pull the arm
 
     timestep = n
 
@@ -53,7 +53,7 @@ def lil_ucb(arms, delta, epsilon, lambda_p, beta, sigma):
 
 
         T[index] += 1
-        reward = sim.simulate(armList[index])
+        reward = sim.simulate(armList[index].get_arm())
         mu[index] = ((T[index]-1)*mu[index] + reward) / T[index] #average the rewards
 
-    return armList[T.argmax()]
+    return armList[T.argmax()].get_arm()
