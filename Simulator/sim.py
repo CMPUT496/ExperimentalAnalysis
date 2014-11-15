@@ -107,21 +107,41 @@ def get_student():
 
     return student
 
+def pick_student(students):
+    num = random.randint(0,9)
+    if(num < 2):
+        return students[0]
+    elif(num < 6):
+        return students[1]
+    elif(num < 8):
+        return students[2]
+    else:
+        return students[3]
 
-def log_results(logFile, student, arm,  probability, result):
+def get_specific_student():
+    s_list = list()
+    s_list.append(Student(random.randint(0,2), 0, 0, 0, "Visual")) # Visual
+    s_list.append(Student(0, random.randint(0,1), 1, 1, "Non-visual")) # Non-visual
+    s_list.append(Student(2, 0, random.randint(0,1), 0, "Indepentant")) # Indepentant
+    s_list.append(Student(1, 1, 1, random.randint(0,1), "Dependant")) # Dependant
+    return s_list
+
+
+def log_results(log_file, student, arm,  probability, result):
     if(result == 1):
         res = "PASS"
     else:
         res = "FAIL"
     #pdb.set_trace()
     log = "Student(%-11s):\t lambda:%.2f <%d, %d, %d, %d> \t  arm: <%d, %d, %d, %d>\t %.2f%s %s\n" %(student.get_name(), student.get_lambda(), student.get_ticks(), student.get_hints(), student.get_target(), student.get_label(), arm.get_ticks(), arm.get_hints(), arm.get_target(), arm.get_label(), probability, "%",res)
-    logFile.write(log)
+    log_file.write(log)
 
-def simulate(config, logFile):
+
+def simulate(config, students, log_file):
     arm = LineConfig(config[0], config[1], config[2], config[3])
-    student = get_student()
+    student = pick_student(students)
     dist = distance(arm, student)
     prob = probability(dist)
     rew = reward(prob)
-    log_results(logFile, student, arm, prob, rew)
+    log_results(log_file, student, arm, prob, rew)
     return rew

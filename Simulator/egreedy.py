@@ -14,7 +14,7 @@ def pick_arm(arms, epsilon):
 		# choose randomly
 		return random.randint(0, len(arms) - 1)
 
-def epsilon_greedy(arms, bound, epsilon):
+def epsilon_greedy(students, arms, bound, epsilon, log_file):
 	"""
 	arms is a list of configurations, each config can be passed as a
 	numpy array.
@@ -34,7 +34,7 @@ def epsilon_greedy(arms, bound, epsilon):
 		s[j].set_num_pulls(s[j].get_num_pulls() + 1)
 
 		# pull the arm
-		reward = sim.simulate(s[j].get_arm())
+		reward = sim.simulate(s[j].get_arm(), students, log_file)
 		s[j].set_total_reward(
 				s[j].get_total_reward() + reward)
 		s[j].set_average(

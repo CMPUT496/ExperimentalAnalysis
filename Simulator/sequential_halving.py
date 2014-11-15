@@ -4,7 +4,7 @@ import sample_arm
 import sim
 import operator
 
-def sequential_halving(arms, bound, logFile):
+def sequential_halving(students, arms, bound, log_file):
     """
     Sequential Halving -- (Fixed Bound)
     Parameters:
@@ -33,7 +33,7 @@ def sequential_halving(arms, bound, logFile):
         total = 0
         for i in range(len(s[r])):
             for j in range(pulls_per_arm):
-                total += sim.simulate(s[r][i].get_arm(), logFile)
+                total += sim.simulate(s[r][i].get_arm(), students, log_file)
 
             s[r][i].set_average(total/pulls_per_arm)
 

@@ -4,9 +4,9 @@ import sample_arm
 import sim
 import math
 
-def lil_ucb(arms, delta, epsilon, lambda_p, beta, sigma):
+def lil_ucb(students, arms, delta, epsilon, lambda_p, beta, sigma, log_file):
     # delta == confidence
-    # 
+    #
     time = 0
     n = len(arms)
     mu = numpy.zeros(n) # set of rewards
@@ -20,7 +20,7 @@ def lil_ucb(arms, delta, epsilon, lambda_p, beta, sigma):
     #sample each of the n arms once, set T_i(t) = 1, for all i and set t=n
     for i in range(n):
         T[i] = 1
-        mu[i] = sim.simulate(armList[i].get_arm()) #pull the arm
+        mu[i] = sim.simulate(armList[i].get_arm(), students, log_file) #pull the arm
 
     timestep = n
 
@@ -32,7 +32,7 @@ def lil_ucb(arms, delta, epsilon, lambda_p, beta, sigma):
 
         for i in range(n):
             #check if an arm has been pulled more than all others combined
-            if T[i] > 1 + lambda_p*(total_pulls - T[i]): 
+            if T[i] > 1 + lambda_p*(total_pulls - T[i]):
                 done = True
                 break
 
@@ -53,7 +53,7 @@ def lil_ucb(arms, delta, epsilon, lambda_p, beta, sigma):
 
 
         T[index] += 1
-        reward = sim.simulate(armList[index].get_arm())
+        reward = sim.simulate(armList[index].get_arm(), students, log_file)
         mu[index] = ((T[index]-1)*mu[index] + reward) / T[index] #average the rewards
 
     return armList[T.argmax()].get_arm()
