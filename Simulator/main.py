@@ -14,8 +14,10 @@ def main():
         config = numpy.asarray([int(n) for n in line.split()])
         configs.append(config)
 
+    students = sim.get_specific_student()
+
     #best_arm = egreedy.epsilon_greedy(configs, 10000, 0.05)
-    best_arm = lil_ucb.lil_ucb(configs , 0.01 , 0.5, 1.0 + (10/144), 1, 0.05)
+    best_arm = lil_ucb.lil_ucb(students, configs , 0.001 , 0.5, 1.0 + (10/144), 1, 0.05)
     # sequential_halving.sequential_halving(configs, 10000)
     print("BEST ARM:")
     print(best_arm)
