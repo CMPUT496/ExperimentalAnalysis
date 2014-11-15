@@ -12,8 +12,6 @@ import numpy
 import random
 import pdb
 
-logFile = open("LogFile.txt", "w")
-
 class LineConfig():
     """
     LineConfig is a representation of a number line configuration.
@@ -110,7 +108,7 @@ def get_student():
     return student
 
 
-def log_results(student, arm,  probability, result):
+def log_results(logFile, student, arm,  probability, result):
     if(result == 1):
         res = "PASS"
     else:
@@ -119,11 +117,11 @@ def log_results(student, arm,  probability, result):
     log = "Student(%-11s):\t lambda:%.2f <%d, %d, %d, %d> \t  arm: <%d, %d, %d, %d>\t %.2f%s %s\n" %(student.get_name(), student.get_lambda(), student.get_ticks(), student.get_hints(), student.get_target(), student.get_label(), arm.get_ticks(), arm.get_hints(), arm.get_target(), arm.get_label(), probability, "%",res)
     logFile.write(log)
 
-def simulate(config):
+def simulate(config, logFile):
     arm = LineConfig(config[0], config[1], config[2], config[3])
     student = get_student()
     dist = distance(arm, student)
     prob = probability(dist)
     rew = reward(prob)
-    log_results(student, arm, prob, rew)
+    log_results(logFile, student, arm, prob, rew)
     return rew
