@@ -2,6 +2,7 @@ import math
 import numpy
 import sample_arm
 import sim
+import operator
 
 def sequential_halving(arms, bound):
     """
@@ -14,33 +15,35 @@ def sequential_halving(arms, bound):
         the array arms, which shrinks by half on each iteration
     """
     s = list()
-
     # add arms with initialized values to the list
+    inner_list = list()
     for i in range(len(arms)):
-        a = list()
-        arm = sample_arm.sampleArm(arms[i])
-        a.append(arm)
-    s.append(a)
+        arm = sample_arm.SampleArm(arms[i])
+        inner_list.append(arm)
+    s.append(inner_list)
 
     # run through iterations of algorithm
-    for r in range(math.ceil(math.log(len(arms)) - 1, 2)):
+    for r in range(int(math.ceil(math.log(len(arms), 2)))):
 
         # compute the pulls per arm per iteration
-        pulls_per_arm = math.floor(bounds / (len(s[r])
-                * math.ceil(math.log(len(arms), 2))))
+        pulls_per_arm = int(math.floor(bound / (len(s[r])
+                * math.ceil(math.log(len(arms), 2)))))
 
         # sample each arm pulls_per_arm times and average results
         total = 0
         for i in range(len(s[r])):
             for j in range(pulls_per_arm):
-				total += simulate(s[r][i].get_arm()
-            # sample arm i from remaining arms pulls_per_arm times
-            s[r][i].setAverage(total/pulls_per_arm)
+                # sample arm i from remaining arms pulls_per_arm times
+                total += sim.simulate(s[r][i].get_arm())
 
-        # sort the remaining arms by average from above sample
-        s[r] = s[r].sort(key=lambda x: x.get_average, reverse=False)
+            s[r][i].set_average(total/pulls_per_arm)
+
+		# sort the remaining arms by average from above sample
+        s[r].sort(key=operator.attrgetter('average'), reverse=True)
 
         # create next iteration which the upper half of the sorted list
-        s.append(math.ceil(s[r][(len(s[r])/2):]))
-
-    return s[math.ceil(math.log(len(arms)), 2)]
+        s.append(s[r][int(math.ceil(len(s[r])/2)):])
+        print("INDEX: %2d" %(r))
+        for arm in s[r+1]:
+            print(arm.get_arm())
+    return s[int(math.ceil(math.log(len(arms), 2)))-1][0].get_arm()
