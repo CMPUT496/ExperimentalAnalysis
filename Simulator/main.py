@@ -1,12 +1,9 @@
 import numpy
 import sim
 import egreedy
-<<<<<<< HEAD
 import lil_ucb
-#import sequential_halving
-=======
 import sequential_halving
->>>>>>> 7eb10319bd93ef1fcec187643a926c373a69fddb
+
 
 def main():
     cFile = open("configs.txt", "r")
