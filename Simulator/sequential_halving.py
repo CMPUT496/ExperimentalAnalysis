@@ -45,4 +45,4 @@ def sequential_halving(arms, bound):
         print("INDEX: %2d" %(r))
         for arm in s[r+1]:
             print(arm.get_arm())
-    return s[int(math.ceil(math.log(len(arms), 2)))-1][0].get_arm()
+    return s[int(math.ceil(math.log(len(arms), 2)))][0].get_arm()
