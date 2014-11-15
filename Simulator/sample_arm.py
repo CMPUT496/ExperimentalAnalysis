@@ -1,4 +1,4 @@
-class sampleArm():
+class SampleArm():
 
     # as of right now I am assuming an arm is represented by a numpy array
     def __init__(self, arm):

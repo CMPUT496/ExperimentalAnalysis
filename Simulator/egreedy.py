@@ -23,7 +23,7 @@ def epsilon_greedy(arms, bound, epsilon):
 	# build list of sampleArm objects to track rewards and averages
 	s = list()
 	for arm in arms:
-		s_arm = sample_arm.sampleArm(arm)
+		s_arm = sample_arm.SampleArm(arm)
 		s.append(s_arm)
 
 	for i in range(bound):
