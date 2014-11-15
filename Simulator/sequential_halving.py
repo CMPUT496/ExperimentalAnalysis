@@ -14,6 +14,9 @@ def sequential_halving(students, arms, bound, log_file):
     ** still unsure how we will set up our s, right now it is a list of
         the array arms, which shrinks by half on each iteration
     """
+    # logging header
+    log_file.write("\n--- Sequential Halving ---\n")
+
     s = list()
     # add arms with initialized values to the list
     inner_list = list()
@@ -37,12 +40,14 @@ def sequential_halving(students, arms, bound, log_file):
 
             s[r][i].set_average(total/pulls_per_arm)
 
-		# sort the remaining arms by average from above sample
+	# sort the remaining arms by average from above sample
         s[r].sort(key=operator.attrgetter('average'), reverse=True)
 
         # create next iteration which the upper half of the sorted list
         s.append(s[r][int(math.ceil(len(s[r])/2)):])
-        print("INDEX: %2d" %(r))
+
+        # log the current array s
+        log_file.write("\nINDEX: %2d\n" %(r))
         for arm in s[r+1]:
-            logFile.write(str(arm.get_arm()))
+            log_file.write("%s\n" %(str(arm.get_arm())))
     return s[int(math.ceil(math.log(len(arms), 2)))][0].get_arm()

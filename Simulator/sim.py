@@ -118,12 +118,17 @@ def pick_student(students):
     else:
         return students[3]
 
-def get_specific_student():
+def get_student_list(log_file):
     s_list = list()
     s_list.append(Student(random.randint(0,2), 0, 0, 0, "Visual")) # Visual
     s_list.append(Student(0, random.randint(0,1), 1, 1, "Non-visual")) # Non-visual
-    s_list.append(Student(2, 0, random.randint(0,1), 0, "Indepentant")) # Indepentant
+    s_list.append(Student(2, 0, random.randint(0,1), 0, "Independant")) # Indepentant
     s_list.append(Student(1, 1, 1, random.randint(0,1), "Dependant")) # Dependant
+    log_file.write("\nStudent List:\n")
+    log_file.write("Visual: \t\t lambda:%.2f <%d, %d, %d, %d>\n" %(s_list[0].get_lambda(), s_list[0].get_ticks(), s_list[0].get_hints(), s_list[0].get_target(), s_list[0].get_label()))
+    log_file.write("Non-Visual: \t lambda:%.2f <%d, %d, %d, %d>\n" %(s_list[1].get_lambda(), s_list[1].get_ticks(), s_list[1].get_hints(), s_list[1].get_target(), s_list[1].get_label()))
+    log_file.write("Independant: \t lambda:%.2f <%d, %d, %d, %d>\n" %(s_list[2].get_lambda(), s_list[2].get_ticks(), s_list[2].get_hints(), s_list[2].get_target(), s_list[2].get_label()))
+    log_file.write("Dependant: \t\t lambda:%.2f <%d, %d, %d, %d>\n" %(s_list[3].get_lambda(), s_list[3].get_ticks(), s_list[3].get_hints(), s_list[3].get_target(), s_list[3].get_label()))
     return s_list
 
 
@@ -143,5 +148,5 @@ def simulate(config, students, log_file):
     dist = distance(arm, student)
     prob = probability(dist)
     rew = reward(prob)
-    log_results(log_file, student, arm, prob, rew)
+    # log_results(log_file, student, arm, prob, rew)
     return rew
