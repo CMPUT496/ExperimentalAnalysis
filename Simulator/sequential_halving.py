@@ -23,7 +23,7 @@ def sequential_halving(arms, bound):
     s.append(a)
 
     # run through iterations of algorithm
-    for r in range(math.log(len(arms)) - 1, 2):
+    for r in range(math.ceil(math.log(len(arms)) - 1, 2)):
 
         # compute the pulls per arm per iteration
         pulls_per_arm = math.floor(bounds / (len(s[r])
@@ -33,9 +33,8 @@ def sequential_halving(arms, bound):
         total = 0
         for i in range(len(s[r])):
             for j in range(pulls_per_arm):
-
-                # sample arm i from remaining arms pulls_per_arm times
-                total += sim.simulate(s[r][i].getArm())
+				total += simulate(s[r][i].get_arm()
+            # sample arm i from remaining arms pulls_per_arm times
             s[r][i].setAverage(total/pulls_per_arm)
 
         # sort the remaining arms by average from above sample
@@ -44,4 +43,4 @@ def sequential_halving(arms, bound):
         # create next iteration which the upper half of the sorted list
         s.append(math.ceil(s[r][(len(s[r])/2):]))
 
-    return s[math.log(len(arms), 2)]
+    return s[math.ceil(math.log(len(arms)), 2)]
