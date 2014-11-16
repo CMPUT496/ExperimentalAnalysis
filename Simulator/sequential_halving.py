@@ -41,13 +41,14 @@ def sequential_halving(students, arms, bound, log_file):
             s[r][i].set_average(total/pulls_per_arm)
 
 	# sort the remaining arms by average from above sample
-        s[r].sort(key=operator.attrgetter('average'), reverse=True)
+        s[r].sort(key=operator.attrgetter('average'), reverse=False)
 
         # create next iteration which the upper half of the sorted list
         s.append(s[r][int(math.ceil(len(s[r])/2)):])
 
         # log the current array s
-        log_file.write("\nINDEX: %2d\n" %(r))
+        log_file.write("\nINDEX: %2d -- PULLS PER ARM: %d\n" %(r, pulls_per_arm))
         for arm in s[r+1]:
-            log_file.write("%s\n" %(str(arm.get_arm())))
+            log_file.write("ARM: %s\tAverage: %f\n" 
+                    %(str(arm.get_arm()), arm.get_average()))
     return s[int(math.ceil(math.log(len(arms), 2)))][0].get_arm()

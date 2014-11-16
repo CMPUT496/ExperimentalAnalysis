@@ -20,6 +20,9 @@ def epsilon_greedy(students, arms, bound, epsilon, log_file):
 	numpy array.
 	bound is the number of arm pulls we will limit ourselves to
 	"""
+        # logging header
+        log_file.write("\n--- Epsilon Greedy ---\n")
+
 	# build list of sampleArm objects to track rewards and averages
 	s = list()
 	for arm in arms:
@@ -45,5 +48,5 @@ def epsilon_greedy(students, arms, bound, epsilon, log_file):
 
 	# return the best arm
 	for arm in s:
-		print(arm.get_average())
+            log_file.write("ARM: %s\tAVERAGE: %f\n" %(str(arm.get_arm()), arm.get_average()))
 	return s[0].get_arm()
