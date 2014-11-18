@@ -29,7 +29,7 @@ class LineConfig():
         self.target = target
         self.label = label
         self.num_pulls = 0.0
-        self.total = 0.0
+        self.total_reward = 0.0
         self.average = 0.0
         self.config_mu = 0.0
 
@@ -45,15 +45,32 @@ class LineConfig():
     def get_label(self):
         return self.label
 
+    def get_num_pulls(self):
+        return self.num_pulls
+
+    def set_num_pulls(self, num_pulls):
+        self.num_pulls = num_pulls
+
+    def get_total_reward(self):
+        return self.total_reward
+
+    def set_total_reward(self, total_reward):
+        self.total_reward = total_reward
+
+    def get_average(self):
+        return self.average
+
+    def set_average(self, average):
+        self.average = average
+
     def get_config_mu(self):
         return self.config_mu
 
     def set_config_mu(self, students):
-        # sum_(over all students) probofchoosing(student) * probofsuccess(config, student)
-        arm = LineConfig(config[0], config[1], config[2], config[3]) 
+        # sum_(over all students) probofchoosing(student) * probofsuccess(config, student) 
         total = 0.0
         for student in students:
-            dist = distance(arm, student)
+            dist = distance(self, student)
             total += student.get_prob() * probability(dist)
         self.config_mu = total
 
@@ -151,7 +168,8 @@ def log_results(log_file, student, arm,  probability, result):
     log_file.write(log)
 
 def simulate(config, students, log_file):
-    arm = LineConfig(config[0], config[1], config[2], config[3])
+    #arm = LineConfig(config[0], config[1], config[2], config[3])
+    arm = config
     student = pick_student(students)
     dist = distance(arm, student)
     prob = probability(dist)

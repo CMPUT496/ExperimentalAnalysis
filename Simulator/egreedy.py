@@ -14,6 +14,11 @@ def pick_arm(arms, epsilon):
         # choose randomly
         return random.randint(0, len(arms) - 1)
 
+def get_actual_max(arms):
+    arms_copy = arms
+    arms_copy.sort(key=operator.attrgetter('config_mu'), reverse=True)
+    return arms_copy[0]
+
 def epsilon_greedy(students, arms, bound, epsilon, log_file):
     """
     arms is a list of configurations, each config can be passed as a
@@ -26,8 +31,11 @@ def epsilon_greedy(students, arms, bound, epsilon, log_file):
     # build list of sampleArm objects to track rewards and averages
     s = list()
     for arm in arms:
-        s_arm = sample_arm.SampleArm(arm)
+        s_arm = sim.LineConfig(arm[0], arm[1], arm[2], arm[3])
+        s_arm.set_config_mu(students)
         s.append(s_arm)
+
+    max_arm = get_actual_max(s)
 
     for i in range(bound):
         # because we are not using a simple numpy.array we will sort
@@ -37,7 +45,7 @@ def epsilon_greedy(students, arms, bound, epsilon, log_file):
         s[j].set_num_pulls(s[j].get_num_pulls() + 1)
 
         # pull the arm
-        reward = sim.simulate(s[j].get_arm(), students, log_file)
+        reward = sim.simulate(s[j], students, log_file)
         s[j].set_total_reward(
                 s[j].get_total_reward() + reward)
         s[j].set_average(
@@ -48,5 +56,6 @@ def epsilon_greedy(students, arms, bound, epsilon, log_file):
 
     # return the best arm
     for arm in s:
-        log_file.write("ARM: %s\tAVERAGE: %f\tCONFIGMU: %f\n" %(str(arm.get_arm()), arm.get_average(), sim.get_config_mu(arm.get_arm(), students)))
-    return s[0].get_arm()
+        log_file.write("ARM: %s\tAVERAGE: %f\tCONFIGMU: %f\tDELTA: %f\n" 
+                %(str(arm), arm.get_average(), arm.get_config_mu(), max_arm.get_config_mu() - arm.get_config_mu()))
+    return str(s[0])
