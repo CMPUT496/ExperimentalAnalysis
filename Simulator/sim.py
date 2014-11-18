@@ -67,7 +67,7 @@ class LineConfig():
         return self.config_mu
 
     def set_config_mu(self, students):
-        # sum_(over all students) probofchoosing(student) * probofsuccess(config, student) 
+        # sum_(over all students) probofchoosing(student) * probofsuccess(config, student)
         total = 0.0
         for student in students:
             dist = distance(self, student)
@@ -126,12 +126,14 @@ def reward(prob):
         return 0    # fail
 
 def pick_student(students):
-    num = random.randint(0,9)
-    if(num < 2):
+    num = random.random()
+    if (num < students[0].get_prob()):
         return students[0]
-    elif(num < 6):
+    elif (num >= students[0].get_prob()
+            and num < (students[0].get_prob() + students[1].get_prob())):
         return students[1]
-    elif(num < 8):
+    elif (num >= (students[0].get_prob() + students[1].get_prob())
+            and num < (students[0].get_prob() + students[1].get_prob() + students[2].get_prob())):
         return students[2]
     else:
         return students[3]
@@ -151,12 +153,12 @@ def get_student_list(log_file):
 
 def get_config_mu(config, students):
     # sum_(over all students) probofchoosing(student) * probofsuccess(config, student)
-    arm = LineConfig(config[0], config[1], config[2], config[3]) 
+    arm = LineConfig(config[0], config[1], config[2], config[3])
     total = 0.0
     for student in students:
         dist = distance(arm, student)
         total += student.get_prob() * probability(dist)
-    return total 
+    return total
 
 def log_results(log_file, student, arm,  probability, result):
     if(result == 1):

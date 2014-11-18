@@ -4,18 +4,23 @@ import egreedy
 import lil_ucb
 import sequential_halving
 import datetime
+import sys
 
 
 def main():
+    if len(sys.argv) > 1:
+        file_name = sys.argv[1]
+    else:
+        file_name = "log_file.txt"
+
     cFile = open("configs.txt", "r")
-    log_file = open("log_file.txt", "a+")
+    log_file = open(file_name, "a+")
     configs = list()
 
     # construct a list of config arrays representing all tha arms
     for line in cFile:
         config = numpy.asarray([int(n) for n in line.split()])
         configs.append(config)
-
 
     # Header for the log file
     time = datetime.datetime.now().time()
