@@ -28,6 +28,10 @@ class LineConfig():
         self.hints = hints
         self.target = target
         self.label = label
+        self.num_pulls = 0.0
+        self.total = 0.0
+        self.average = 0.0
+        self.config_mu = 0.0
 
     def get_ticks(self):
         return self.ticks
@@ -40,6 +44,18 @@ class LineConfig():
 
     def get_label(self):
         return self.label
+
+    def get_config_mu(self):
+        return self.config_mu
+
+    def set_config_mu(self, students):
+        # sum_(over all students) probofchoosing(student) * probofsuccess(config, student)
+        arm = LineConfig(config[0], config[1], config[2], config[3]) 
+        total = 0.0
+        for student in students:
+            dist = distance(arm, student)
+            total += student.get_prob() * probability(dist)
+        self.config_mu = total
 
     def __str__(self):
         return "<%d, %d, %d, %d>" %(self.ticks, self.hints, self.target, self.label)
@@ -58,6 +74,7 @@ class Student(LineConfig):
         LineConfig.__init__(self, ticks, hints, target, label)
         self.s_lambda = numpy.random.normal(1, 0.1)
         self.name = name
+        self.prob = prob
 
     def get_lambda(self):
         return self.s_lambda
@@ -91,21 +108,6 @@ def reward(prob):
     else:
         return 0    # fail
 
-def get_student():
-    # Picks a type of student based on same probability
-    # 20%: visual, 40%: non-visual, 20%: independant, 20%: dependant
-    studType = random.randint(0,9)
-    if(studType < 2):
-        student = Student(random.randint(0,2), 0, 0, 0, "Visual") # Visual
-    elif(studType <= 5):
-        student = Student(0, random.randint(0,1), 1, 1, "Non-visual") # Non-visual
-    elif(studType <= 7):
-        student = Student(2, 0, random.randint(0,1), 0, "Indepentant") # Indepentant
-    else:
-        student = Student(1, 1, 1, random.randint(0,1), "Dependant") # Dependant
-
-    return student
-
 def pick_student(students):
     num = random.randint(0,9)
     if(num < 2):
@@ -130,11 +132,12 @@ def get_student_list(log_file):
     log_file.write("Dependant: \t\t lambda:%.2f %s\n" %(s_list[3].get_lambda(), str(s_list[3])))
     return s_list
 
-def getConfigMu(config, students):
+def get_config_mu(config, students):
     # sum_(over all students) probofchoosing(student) * probofsuccess(config, student)
+    arm = LineConfig(config[0], config[1], config[2], config[3]) 
     total = 0.0
     for student in students:
-        dist = distance(config, student)
+        dist = distance(arm, student)
         total += student.get_prob() * probability(dist)
     return total 
 
@@ -146,7 +149,6 @@ def log_results(log_file, student, arm,  probability, result):
 
     log = "Student(%-11s):\t lambda:%.2f %s\t  arm: %s\t %.2f%s %s\n" %(student.get_name(), student.get_lambda(), str(student), str(arm), probability, "%",res)
     log_file.write(log)
-
 
 def simulate(config, students, log_file):
     arm = LineConfig(config[0], config[1], config[2], config[3])
