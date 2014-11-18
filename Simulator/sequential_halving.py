@@ -41,11 +41,10 @@ def sequential_halving(students, arms, bound, log_file):
                 * math.ceil(math.log(len(arms), 2)))))
 
         # sample each arm pulls_per_arm times and average results
-        total = 0
         for i in range(len(s[r])):
+            total = 0.0
             for j in range(pulls_per_arm):
                 total += sim.simulate(s[r][i], students, log_file)
-
             s[r][i].set_average(total/pulls_per_arm)
 
 	# sort the remaining arms by average from above sample
