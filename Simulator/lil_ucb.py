@@ -25,6 +25,7 @@ def lil_ucb(students, arms, delta, epsilon, lambda_p, beta, sigma, log_file):
 
     # actual max used for comparison
     actual_max = get_actual_max(armList)
+    log_file.write("\n--------------\nOptimal Arm: %s \n--------------\n" %(actual_max))
 
     #sample each of the n arms once, set T_i(t) = 1, for all i and set t=n
     for i in range(n):
@@ -34,10 +35,10 @@ def lil_ucb(students, arms, delta, epsilon, lambda_p, beta, sigma, log_file):
     timestep = n
 
     while True:
-        counter = 0
         done = False
         total_pulls = sum(T)
         timestep += 1
+
 
         for i in range(n):
             #check if an arm has been pulled more than all others combined
@@ -64,5 +65,8 @@ def lil_ucb(students, arms, delta, epsilon, lambda_p, beta, sigma, log_file):
         T[index] += 1
         reward = sim.simulate(armList[index], students, log_file)
         mu[index] = ((T[index]-1)*mu[index] + reward) / T[index] #average the rewards
+
+        if(timestep % 100 == 0):
+            log_file.write("ITERATION: %3d ARM: %s\tAVERAGE: %f\tCONFIGMU: %f\tDELTA: %f\n" %(timestep//100, str(armList[index]), armList[index].get_average(), armList[index].get_config_mu(), actual_max.get_config_mu() - armList[index].get_config_mu()))
 
     return armList[T.argmax()]
