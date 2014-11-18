@@ -22,7 +22,6 @@ def main():
         config = numpy.asarray([int(n) for n in line.split()])
         configs.append(config)
 
-
     # Header for the log file
     time = datetime.datetime.now().time()
     log_file.write("%s" %(time.strftime("%Y-%m-%d %H:%M:%S")))
