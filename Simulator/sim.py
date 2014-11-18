@@ -25,16 +25,12 @@ class LineConfig():
 
     def __init__(self, ticks, hints, target, label):
         self.ticks = ticks
-        #self.fractions = fractions
         self.hints = hints
         self.target = target
         self.label = label
 
     def get_ticks(self):
         return self.ticks
-
-    # def getFraction(self):
-    #     return self.fractions
 
     def get_hints(self):
         return self.hints
@@ -45,6 +41,9 @@ class LineConfig():
     def get_label(self):
         return self.label
 
+    def __str__(self):
+        return "<%d, %d, %d, %d>" %(self.ticks, self.hints, self.target, self.label)
+
 
 class Student(LineConfig):
     """
@@ -54,7 +53,7 @@ class Student(LineConfig):
 
     Student inherits from LineConfig
     """
-    def __init__(self, ticks, hints, target, label, name):
+    def __init__(self, ticks, hints, target, label, name, prob):
         # call line_config
         LineConfig.__init__(self, ticks, hints, target, label)
         self.s_lambda = numpy.random.normal(1, 0.1)
@@ -66,17 +65,17 @@ class Student(LineConfig):
     def get_name(self):
         return self.name
 
+    def get_prob(self):
+        return self.prob
 
 def distance(arm, student):
     # calculate distance
     dist = 0.0    # offset
     dist += 0.1 * (numpy.absolute(arm.get_ticks() - student.get_ticks()))
-    # dist += 0.08 * (numpy.absolute(arm.getFraction() - student.getFraction()))
     dist += 0.05 * (numpy.absolute(arm.get_hints() - student.get_hints()))
     dist += 0.5 * (numpy.absolute(arm.get_target() - student.get_target()))
     dist += 0.5 * (numpy.absolute(arm.get_label() - student.get_label()))
     dist *= student.get_lambda()
-    #print "Distance: %f" %(dist)
     return dist
 
 def probability(dist):
@@ -120,25 +119,32 @@ def pick_student(students):
 
 def get_student_list(log_file):
     s_list = list()
-    s_list.append(Student(random.randint(0,2), 0, 0, 0, "Visual")) # Visual
-    s_list.append(Student(0, random.randint(0,1), 1, 1, "Non-visual")) # Non-visual
-    s_list.append(Student(2, 0, random.randint(0,1), 0, "Independant")) # Indepentant
-    s_list.append(Student(1, 1, 1, random.randint(0,1), "Dependant")) # Dependant
+    s_list.append(Student(random.randint(0,2), 0, 0, 0, "Visual", 0.20)) # Visual
+    s_list.append(Student(0, random.randint(0,1), 1, 1, "Non-visual", 0.40)) # Non-visual
+    s_list.append(Student(2, 0, random.randint(0,1), 0, "Independant", 0.20)) # Indepentant
+    s_list.append(Student(1, 1, 1, random.randint(0,1), "Dependant", 0.20)) # Dependant
     log_file.write("\nStudent List:\n")
-    log_file.write("Visual: \t\t lambda:%.2f <%d, %d, %d, %d>\n" %(s_list[0].get_lambda(), s_list[0].get_ticks(), s_list[0].get_hints(), s_list[0].get_target(), s_list[0].get_label()))
-    log_file.write("Non-Visual: \t lambda:%.2f <%d, %d, %d, %d>\n" %(s_list[1].get_lambda(), s_list[1].get_ticks(), s_list[1].get_hints(), s_list[1].get_target(), s_list[1].get_label()))
-    log_file.write("Independant: \t lambda:%.2f <%d, %d, %d, %d>\n" %(s_list[2].get_lambda(), s_list[2].get_ticks(), s_list[2].get_hints(), s_list[2].get_target(), s_list[2].get_label()))
-    log_file.write("Dependant: \t\t lambda:%.2f <%d, %d, %d, %d>\n" %(s_list[3].get_lambda(), s_list[3].get_ticks(), s_list[3].get_hints(), s_list[3].get_target(), s_list[3].get_label()))
+    log_file.write("Visual: \t\t lambda:%.2f %s\n" %(s_list[0].get_lambda(), str(s_list[0])))
+    log_file.write("Non-Visual: \t lambda:%.2f %s\n" %(s_list[1].get_lambda(), str(s_list[1])))
+    log_file.write("Independant: \t lambda:%.2f %s\n" %(s_list[2].get_lambda(), str(s_list[2])))
+    log_file.write("Dependant: \t\t lambda:%.2f %s\n" %(s_list[3].get_lambda(), str(s_list[3])))
     return s_list
 
+def getConfigMu(config, students):
+    # sum_(over all students) probofchoosing(student) * probofsuccess(config, student)
+    total = 0.0
+    for student in students:
+        dist = distance(config, student)
+        total += student.get_prob() * probability(dist)
+    return total 
 
 def log_results(log_file, student, arm,  probability, result):
     if(result == 1):
         res = "PASS"
     else:
         res = "FAIL"
-    #pdb.set_trace()
-    log = "Student(%-11s):\t lambda:%.2f <%d, %d, %d, %d> \t  arm: <%d, %d, %d, %d>\t %.2f%s %s\n" %(student.get_name(), student.get_lambda(), student.get_ticks(), student.get_hints(), student.get_target(), student.get_label(), arm.get_ticks(), arm.get_hints(), arm.get_target(), arm.get_label(), probability, "%",res)
+
+    log = "Student(%-11s):\t lambda:%.2f %s\t  arm: %s\t %.2f%s %s\n" %(student.get_name(), student.get_lambda(), str(student), str(arm), probability, "%",res)
     log_file.write(log)
 
 

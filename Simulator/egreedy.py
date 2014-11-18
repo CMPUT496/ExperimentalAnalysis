@@ -20,8 +20,8 @@ def epsilon_greedy(students, arms, bound, epsilon, log_file):
 	numpy array.
 	bound is the number of arm pulls we will limit ourselves to
 	"""
-        # logging header
-        log_file.write("\n--- Epsilon Greedy ---\n")
+	# logging header
+	log_file.write("\n--- Epsilon Greedy ---\n")
 
 	# build list of sampleArm objects to track rewards and averages
 	s = list()
