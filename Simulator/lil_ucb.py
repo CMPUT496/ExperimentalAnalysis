@@ -19,7 +19,7 @@ def lil_ucb(students, arms, delta, epsilon, lambda_p, beta, sigma, log_file):
     armList = list()
 
     for arm in arms:
-        s_arm = sim.LineConfig(arm[0], arm[1], arm[2], arm[3])
+        s_arm = sim.LineConfig(arm[0], arm[1], arm[2], arm[3], arm[4])
         s_arm.set_config_mu(students)
         armList.append(s_arm)
 

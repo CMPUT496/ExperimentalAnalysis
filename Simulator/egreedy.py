@@ -30,7 +30,7 @@ def epsilon_greedy(students, arms, bound, epsilon, log_file):
     # build list of sampleArm objects to track rewards and averages
     s = list()
     for arm in arms:
-        s_arm = sim.LineConfig(arm[0], arm[1], arm[2], arm[3])
+        s_arm = sim.LineConfig(arm[0], arm[1], arm[2], arm[3], arm[4])
         s_arm.set_config_mu(students)
         s.append(s_arm)
 
@@ -55,6 +55,6 @@ def epsilon_greedy(students, arms, bound, epsilon, log_file):
 
     # return the best arm
     for arm in s:
-        log_file.write("ARM: %s\tAVERAGE: %f\tCONFIGMU: %f\tDELTA: %f\n" 
+        log_file.write("ARM: %s\tAVERAGE: %f\tCONFIGMU: %f\tDELTA: %f\n"
                 %(str(arm), arm.get_average(), arm.get_config_mu(), max_arm.get_config_mu() - arm.get_config_mu()))
     return str(s[0])

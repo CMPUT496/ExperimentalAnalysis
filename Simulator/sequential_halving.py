@@ -25,7 +25,7 @@ def sequential_halving(students, arms, bound, log_file):
     # add arms with initialized values to the list
     inner_list = list()
     for arm in arms:
-        s_arm = sim.LineConfig(arm[0], arm[1], arm[2], arm[3])
+        s_arm = sim.LineConfig(arm[0], arm[1], arm[2], arm[3], arm[4])
         s_arm.set_config_mu(students)
         inner_list.append(s_arm)
     s.append(inner_list)
