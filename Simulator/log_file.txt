@@ -224,3 +224,19 @@ ARM: <1, 1, 0, 1>	AVERAGE: 0.396313	CONFIGMU: 0.490193	DELTA: 0.128421
 BEST ARM: <0, 1, 1, 1>
 --- END OF EXPERIMENT ---
 
+1900-01-01 09:42:37
+Student List:
+Visual: 		 lambda:0.93 <0, 0, 0, 0>
+Non-Visual: 	 lambda:0.88 <0, 1, 1, 1>
+Independant: 	 lambda:1.02 <2, 0, 1, 0>
+Dependant: 		 lambda:1.25 <1, 1, 1, 0>
+1900-01-01 09:43:02
+Student List:
+Visual: 		 lambda:1.01 <2, 0, 0, 0>
+Non-Visual: 	 lambda:0.92 <0, 1, 1, 1>
+Independant: 	 lambda:1.10 <2, 0, 1, 0>
+Dependant: 		 lambda:1.06 <1, 1, 1, 1>
+
+BEST ARM: <1, 1, 1, 1>
+--- END OF EXPERIMENT ---
+

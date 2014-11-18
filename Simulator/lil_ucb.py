@@ -1,8 +1,13 @@
 import numpy
 import random
-import sample_arm
 import sim
 import math
+import operator
+
+def get_actual_max(arms):
+    arms_copy = arms
+    arms_copy.sort(key=operator.attrgetter('config_mu'), reverse=True)
+    return arms_copy[0]
 
 def lil_ucb(students, arms, delta, epsilon, lambda_p, beta, sigma, log_file):
     # delta == confidence
@@ -14,13 +19,17 @@ def lil_ucb(students, arms, delta, epsilon, lambda_p, beta, sigma, log_file):
     armList = list()
 
     for arm in arms:
-        s_arm = sample_arm.SampleArm(arm)
+        s_arm = sim.LineConfig(arm[0], arm[1], arm[2], arm[3])
+        s_arm.set_config_mu(students)
         armList.append(s_arm)
+
+    # actual max used for comparison
+    actual_max = get_actual_max(armList)
 
     #sample each of the n arms once, set T_i(t) = 1, for all i and set t=n
     for i in range(n):
         T[i] = 1
-        mu[i] = sim.simulate(armList[i].get_arm(), students, log_file) #pull the arm
+        mu[i] = sim.simulate(armList[i], students, log_file) #pull the arm
 
     timestep = n
 
@@ -53,7 +62,7 @@ def lil_ucb(students, arms, delta, epsilon, lambda_p, beta, sigma, log_file):
 
 
         T[index] += 1
-        reward = sim.simulate(armList[index].get_arm(), students, log_file)
+        reward = sim.simulate(armList[index], students, log_file)
         mu[index] = ((T[index]-1)*mu[index] + reward) / T[index] #average the rewards
 
-    return armList[T.argmax()].get_arm()
+    return armList[T.argmax()]

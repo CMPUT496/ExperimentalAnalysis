@@ -1,5 +1,6 @@
-*LogFile.txt
+*log_file.txt
 *.swp
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
