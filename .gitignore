@@ -1,4 +1,4 @@
-*log_file.txt
+*.txt
 *.swp
 
 # Byte-compiled / optimized / DLL files
