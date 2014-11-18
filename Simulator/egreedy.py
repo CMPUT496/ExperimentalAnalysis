@@ -1,6 +1,5 @@
 import numpy
 import random
-import sample_arm
 import sim
 import operator
 
