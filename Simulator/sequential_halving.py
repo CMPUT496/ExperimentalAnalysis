@@ -25,16 +25,11 @@ def sequential_halving(students, arms, bound, log_file):
     # add arms with initialized values to the list
     inner_list = list()
     for arm in arms:
-        #arm = sample_arm.SampleArm(arms[i])
-        #print("INPUTTED ARM: %s" %(arm))
         s_arm = sim.LineConfig(arm[0], arm[1], arm[2], arm[3])
         s_arm.set_config_mu(students)
-        #print("GENERATTED LINECONFIG: %s" %(s_arm))
         inner_list.append(s_arm)
     s.append(inner_list)
 
-    #for arm in s[0]:
-    #    print(arm)
     # get the arm with the highest config_mu for comparison
     actual_max = get_actual_max(s[0])
 
@@ -62,6 +57,6 @@ def sequential_halving(students, arms, bound, log_file):
         # log the current array s
         log_file.write("\nINDEX: %2d -- PULLS PER ARM: %d\n" %(r, pulls_per_arm))
         for arm in s[r+1]:
-            log_file.write("ARM: %s\tAverage: %f\n"
-                    %(str(arm), arm.get_average()))
+            log_file.write("ARM: %s\tAVERAGE: %f\tCONFIGMU: %f\tDELTA: %f\n"
+                    %(str(arm), arm.get_average(),arm.get_config_mu(), actual_max.get_config_mu() - arm.get_config_mu()))
     return s[int(math.ceil(math.log(len(arms), 2)))][0]
