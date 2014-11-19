@@ -40,7 +40,7 @@ def epsilon_greedy(students, arms, bound, epsilon, log_file):
 
     max_arm = get_actual_max(s)
     # set deltas
-    calculate_delta(s, actual_max)
+    calculate_delta(s, max_arm)
 
     for i in range(bound):
         # because we are not using a simple numpy.array we will sort
