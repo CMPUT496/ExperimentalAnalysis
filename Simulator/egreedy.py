@@ -18,6 +18,10 @@ def get_actual_max(arms):
     arms_copy.sort(key=operator.attrgetter('config_mu'), reverse=True)
     return arms_copy[0]
 
+def calculate_delta(arms, actual_max):
+    for arm in arms:
+        arm.set_delta(actual_max.get_config_mu() - arm.get_config_mu())
+
 def epsilon_greedy(students, arms, bound, epsilon, log_file):
     """
     arms is a list of configurations, each config can be passed as a
@@ -35,6 +39,8 @@ def epsilon_greedy(students, arms, bound, epsilon, log_file):
         s.append(s_arm)
 
     max_arm = get_actual_max(s)
+    # set deltas
+    calculate_delta(s, actual_max)
 
     for i in range(bound):
         # because we are not using a simple numpy.array we will sort
@@ -56,5 +62,10 @@ def epsilon_greedy(students, arms, bound, epsilon, log_file):
     # return the best arm
     for arm in s:
         log_file.write("ARM: %s\tAVERAGE: %f\tCONFIGMU: %f\tDELTA: %f\n"
-                %(str(arm), arm.get_average(), arm.get_config_mu(), max_arm.get_config_mu() - arm.get_config_mu()))
+                %(str(arm), arm.get_average(), arm.get_config_mu(), arm.get_delta()))
+
+    arm = s[0]
+    log_file.write("\nBEST ARM: %s\tAVERAGE: %f\tCONFIGMU: %f\tDELTA: %f\n"
+            %(str(arm), arm.get_average(),arm.get_config_mu(), arm.get_delta()))
+
     return str(s[0])

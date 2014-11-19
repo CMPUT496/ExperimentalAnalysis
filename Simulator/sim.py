@@ -33,6 +33,7 @@ class LineConfig():
         self.total_reward = 0.0
         self.average = 0.0
         self.config_mu = 0.0
+        self.delta = 0.0
 
     def get_ticks(self):
         return self.ticks
@@ -77,6 +78,12 @@ class LineConfig():
             dist = distance(self, student)
             total += student.get_prob() * probability(dist)
         self.config_mu = total
+
+    def set_delta(self, delta):
+        self.delta = delta
+
+    def get_delta(self):
+        return self.delta
 
     def __str__(self):
         return "<%d, %d, %d, %d>" %(self.ticks, self.hints, self.target, self.label)
@@ -150,10 +157,10 @@ def get_student_list(log_file):
     s_list.append(Student(2, random.randint(0,4), 0, random.randint(0,1), 0, "Independant", 0.20)) # Indepentant
     s_list.append(Student(1, random.randint(0,4), 1, 1, random.randint(0,1), "Dependant", 0.20)) # Dependant
     log_file.write("\nStudent List:\n")
-    log_file.write("Visual: \t\t lambda:%.2f %s\n" %(s_list[0].get_lambda(), str(s_list[0])))
-    log_file.write("Non-Visual: \t lambda:%.2f %s\n" %(s_list[1].get_lambda(), str(s_list[1])))
-    log_file.write("Independant: \t lambda:%.2f %s\n" %(s_list[2].get_lambda(), str(s_list[2])))
-    log_file.write("Dependant: \t\t lambda:%.2f %s\n" %(s_list[3].get_lambda(), str(s_list[3])))
+    log_file.write("Visual: \t\t lambda:%.2f %s\tprobability: %f\n" %(s_list[0].get_lambda(), str(s_list[0]), s_list[0].get_prob()))
+    log_file.write("Non-Visual: \t lambda:%.2f %s\tprobability: %f\n" %(s_list[1].get_lambda(), str(s_list[1]), s_list[1].get_prob()))
+    log_file.write("Independant: \t lambda:%.2f %s\tprobability: %f\n" %(s_list[2].get_lambda(), str(s_list[2]), s_list[2].get_prob()))
+    log_file.write("Dependant: \t\t lambda:%.2f %s\tprobability: %f\n" %(s_list[3].get_lambda(), str(s_list[3]), s_list[3].get_prob()))
     return s_list
 
 def get_config_mu(config, students):

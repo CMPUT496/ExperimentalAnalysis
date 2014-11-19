@@ -9,6 +9,10 @@ def get_actual_max(arms):
     arms_copy.sort(key=operator.attrgetter('config_mu'), reverse=True)
     return arms_copy[0]
 
+def calculate_delta(arms, actual_max):
+    for arm in arms:
+        arm.set_delta(actual_max.get_config_mu() - arm.get_config_mu())
+
 def lil_ucb(students, arms, delta, epsilon, lambda_p, beta, sigma, log_file):
     # delta == confidence
     #
@@ -25,6 +29,8 @@ def lil_ucb(students, arms, delta, epsilon, lambda_p, beta, sigma, log_file):
 
     # actual max used for comparison
     actual_max = get_actual_max(armList)
+    # set deltas
+    calculate_delta(armList, actual_max)
     log_file.write("\n--------------\nOptimal Arm: %s \n--------------\n" %(actual_max))
 
     #sample each of the n arms once, set T_i(t) = 1, for all i and set t=n
@@ -67,6 +73,10 @@ def lil_ucb(students, arms, delta, epsilon, lambda_p, beta, sigma, log_file):
         mu[index] = ((T[index]-1)*mu[index] + reward) / T[index] #average the rewards
 
         if(timestep % 100 == 0):
-            log_file.write("ITERATION: %3d ARM: %s\tAVERAGE: %f\tCONFIGMU: %f\tDELTA: %f\n" %(timestep//100, str(armList[index]), armList[index].get_average(), armList[index].get_config_mu(), actual_max.get_config_mu() - armList[index].get_config_mu()))
+            log_file.write("ITERATION: %3d ARM: %s\tAVERAGE: %f\tCONFIGMU: %f\tDELTA: %f\n" %(timestep//100, str(armList[index]), armList[index].get_average(), armList[index].get_config_mu(), armList[index].get_delta()))
+
+    arm = armList[T.argmax()]
+    log_file.write("\nBEST ARM: %s\tAVERAGE: %f\tCONFIGMU: %f\tDELTA: %f\n"
+            %(str(arm), arm.get_average(),arm.get_config_mu(), arm.get_delta()))
 
     return armList[T.argmax()]

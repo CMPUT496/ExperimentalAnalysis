@@ -8,6 +8,10 @@ def get_actual_max(arms):
     arms_copy.sort(key=operator.attrgetter('config_mu'), reverse=True)
     return arms_copy[0]
 
+def calculate_delta(arms, actual_max):
+    for arm in arms:
+        arm.set_delta(actual_max.get_config_mu() - arm.get_config_mu())
+
 def sequential_halving(students, arms, bound, log_file):
     """
     Sequential Halving -- (Fixed Bound)
@@ -33,6 +37,9 @@ def sequential_halving(students, arms, bound, log_file):
     # get the arm with the highest config_mu for comparison
     actual_max = get_actual_max(s[0])
 
+    # set deltas
+    calculate_delta(s[0], actual_max)
+
     # run through iterations of algorithm
     for r in range(int(math.ceil(math.log(len(arms), 2)))):
 
@@ -57,5 +64,10 @@ def sequential_halving(students, arms, bound, log_file):
         log_file.write("\nINDEX: %2d -- PULLS PER ARM: %d\n" %(r, pulls_per_arm))
         for arm in s[r+1]:
             log_file.write("ARM: %s\tAVERAGE: %f\tCONFIGMU: %f\tDELTA: %f\n"
-                    %(str(arm), arm.get_average(),arm.get_config_mu(), actual_max.get_config_mu() - arm.get_config_mu()))
+                    %(str(arm), arm.get_average(),arm.get_config_mu(), arm.get_delta()))
+
+    arm = s[int(math.ceil(math.log(len(arms), 2)))][0]
+    log_file.write("\nBEST ARM: %s\tAVERAGE: %f\tCONFIGMU: %f\tDELTA: %f\n"
+            %(str(arm), arm.get_average(),arm.get_config_mu(), arm.get_delta()))
+
     return s[int(math.ceil(math.log(len(arms), 2)))][0]

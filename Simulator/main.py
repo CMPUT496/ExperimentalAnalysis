@@ -35,7 +35,7 @@ def main():
     students = sim.get_student_list(log_file)
 
     if (int(sys.argv[1]) == 0):
-        epsilon = 0.05
+        epsilon = 0.1
         bound = 100000
         print("Running epsilon greedy algorithm with epsilon = %f, and bounded by %d pulls..."
                 %(epsilon, bound))
@@ -50,7 +50,7 @@ def main():
         print("Running lil-UCB algorithm with epsilon: %.3f, confidence: %.3f, beta: %d, lambda: %d...\n" %( e, conf, beta, lambda_))
         best_arm = lil_ucb.lil_ucb(students, configs, (((math.sqrt(1 + (conf/2)) - 1)**2)/(4*c_e)) , e, lambda_, beta , 1-conf, log_file)
     else:
-        bound = 10000
+        bound = 100000
         print("Running sequential-halving algorithm bounded by %d pulls..."
                 %(bound))
         best_arm = sequential_halving.sequential_halving(students, configs, bound, log_file)
