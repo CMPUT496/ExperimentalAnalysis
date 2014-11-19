@@ -55,7 +55,6 @@ def main():
                 %(bound))
         best_arm = sequential_halving.sequential_halving(students, configs, bound, log_file)
 
-    log_file.write("\nBEST ARM: %s\n" %(str(best_arm)))
     log_file.write("--- END OF EXPERIMENT ---\n\n")
     print("BEST ARM:")
     print(best_arm)
