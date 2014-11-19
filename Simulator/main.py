@@ -5,6 +5,7 @@ import lil_ucb
 import sequential_halving
 import datetime
 import sys
+import math
 
 
 def main():
@@ -40,8 +41,14 @@ def main():
                 %(epsilon, bound))
         best_arm = egreedy.epsilon_greedy(students, configs, bound, epsilon, log_file)
     elif (int(sys.argv[1]) == 1):
-        print("Running lil-UCB algorithm...")
-        best_arm = lil_ucb.lil_ucb(students, configs, 0.001 , 0.5, 1.0 + (10/144), 1, 0.05, log_file)
+        conf = 0.95
+        e = 0.01 #epsilon
+        c_e = ((2+e)/2) * ((1/math.log(1+e))** ( 1 + e)) # C sub epsilon
+        beta = 1
+        lambda_ = 9
+
+        print("Running lil-UCB algorithm with epsilon: %.3f, confidence: %.3f, beta: %d, lambda: %d...\n" %( e, conf, beta, lambda_))
+        best_arm = lil_ucb.lil_ucb(students, configs, (((math.sqrt(1 + (conf/2)) - 1)**2)/(4*c_e)) , e, lambda_, beta , 1-conf, log_file)
     else:
         bound = 10000
         print("Running sequential-halving algorithm bounded by %d pulls..."
