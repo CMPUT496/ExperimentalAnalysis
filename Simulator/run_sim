@@ -14,7 +14,8 @@
 alg=$1
 iterations=$2
 logfile=$3
-extra=$4
+conffile=$4
+extra=$5
 COUNTER=0
 
 while [ $COUNTER -lt $iterations ]; do
@@ -22,15 +23,15 @@ while [ $COUNTER -lt $iterations ]; do
     then
         # e-greedy
         : ${extra:=0.1}
-        python main.py $alg $logfile $extra
+        python main.py $alg $logfile $conffile $extra
     elif [ $alg -eq 1 ];
     then 
         # lil-UCB
-        python main.py $alg $logfile
+        python main.py $alg $logfile $conffile
     else
         # sequential halving
         : ${extra:=50000}
-        python main.py $alg $logfile $extra
+        python main.py $alg $logfile $conffile $extra
     fi
     let COUNTER=COUNTER+1
 done;
