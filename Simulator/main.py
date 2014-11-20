@@ -18,8 +18,8 @@ def main():
         print("Not enough arguments")
         sys.exit(0)
 
-    #cFile = open("configs.txt", "r")
-    cFile = open("configs_extras.txt", "r")
+    cFile = open("configs.txt", "r")
+    #cFile = open("configs_extras.txt", "r")
     log_file = open(file_name, "a+")
     configs = list()
 
@@ -46,20 +46,25 @@ def main():
         log_file.write(message)
         best_arm = egreedy.epsilon_greedy(students, configs,
                 bound, epsilon, log_file)
+
     elif (int(sys.argv[1]) == 1):
         conf = 0.95
         e = 0.01 #epsilon
         c_e = ((2+e)/2) * ((1/math.log(1+e))** ( 1 + e)) # C sub epsilon
         beta = 1
         lambda_ = 9
+        bound = 100000
+        delta = (((math.sqrt(1 + (conf/2)) - 1)**2)/(4*c_e)) 
+        
+        if (len(sys.argv) > 3):
+            bound = int(sys.argv[3])
 
         message = "Running lil-UCB algorithm with epsilon: %.3f, confidence:" \
                 " %.3f, beta: %d, lambda: %d...\n" %( e, conf, beta, lambda_)
         print(message)
         log_file.write(message)
-        best_arm = lil_ucb.lil_ucb(students, configs,
-                (((math.sqrt(1 + (conf/2)) - 1)**2)/(4*c_e)) ,
-                e, lambda_, beta , 1-conf, log_file)
+        best_arm = lil_ucb.lil_ucb(students, configs, delta,
+                e, lambda_, beta , 1-conf, log_file, bound)
     else:
         bound = 50000
         if (len(sys.argv) > 3):

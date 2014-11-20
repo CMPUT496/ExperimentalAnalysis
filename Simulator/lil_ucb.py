@@ -13,7 +13,7 @@ def calculate_delta(arms, actual_max):
     for arm in arms:
         arm.set_delta(actual_max.get_config_mu() - arm.get_config_mu())
 
-def lil_ucb(students, arms, delta, epsilon, lambda_p, beta, sigma, log_file):
+def lil_ucb(students, arms, delta, epsilon, lambda_p, beta, sigma, log_file, max_pulls):
     # delta == confidence
     #
     time = 0
@@ -21,6 +21,7 @@ def lil_ucb(students, arms, delta, epsilon, lambda_p, beta, sigma, log_file):
     mu = numpy.zeros(n) # set of rewards
     T = numpy.zeros(n) # T[i] is the number of times arm i has been pulled
     armList = list()
+    timestep = 0
 
     for arm in arms:
         s_arm = sim.LineConfig(arm[0], arm[1], arm[2], arm[3], arm[4])
@@ -36,14 +37,15 @@ def lil_ucb(students, arms, delta, epsilon, lambda_p, beta, sigma, log_file):
     for i in range(n):
         T[i] = 1
         mu[i] = sim.simulate(armList[i], students, log_file) #pull the arm
+        log_file.write("ITERATION: %6d ARM: %s\tCONFIGMU: %f\tDELTA: %f\n" %(timestep, str(armList[i]), armList[i].get_config_mu(), armList[i].get_delta()))
+        timestep += 1
 
-    timestep = n
+    prevIndex = -1;
 
     while True:
         done = False
         total_pulls = sum(T)
         timestep += 1
-
 
         for i in range(n):
             #check if an arm has been pulled more than all others combined
@@ -71,9 +73,16 @@ def lil_ucb(students, arms, delta, epsilon, lambda_p, beta, sigma, log_file):
         reward = sim.simulate(armList[index], students, log_file)
         mu[index] = ((T[index]-1)*mu[index] + reward) / T[index] #average the rewards
 
-        if(timestep % 10000 == 0):
-            log_file.write("ITERATION: %3d ARM: %s\tCONFIGMU: %f\tDELTA: %f\n" %(timestep//100, str(armList[index]), armList[index].get_config_mu(), armList[index].get_delta()))
+        # if(timestep % 10000 == 0):
+        #     log_file.write("ITERATION: %3d ARM: %s\tCONFIGMU: %f\tDELTA: %f\n" %(timestep//100, str(armList[index]), armList[index].get_config_mu(), armList[index].get_delta()))
+        if(prevIndex != index):
+            log_file.write("ITERATION: %6d ARM: %s\tCONFIGMU: %f\tDELTA: %f\n" %(timestep, str(armList[index]), armList[index].get_config_mu(), armList[index].get_delta()))
 
+        prevIndex = index
+        if(timestep == max_pulls):
+            break
+
+    log_file.write("ITERATION: %6d ARM: %s\tCONFIGMU: %f\tDELTA: %f\n" %(timestep, str(armList[index]), armList[index].get_config_mu(), armList[index].get_delta()))
     arm = armList[T.argmax()]
     log_file.write("\nBEST ARM: %s\tCONFIGMU: %f\tDELTA: %f\n"
             %(str(arm), arm.get_config_mu(), arm.get_delta()))
