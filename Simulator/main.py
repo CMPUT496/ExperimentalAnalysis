@@ -9,16 +9,17 @@ import math
 
 
 def main():
-    if len(sys.argv) > 2:
+    if len(sys.argv) > 3:
         file_name = "Logs/"
         file_name += sys.argv[2]
+        config_name = "configs/" + sys.argv[3]
     elif len(sys.argv) > 1:
         file_name = "Logs/log_file.txt"
     else:
         print("Not enough arguments")
         sys.exit(0)
 
-    cFile = open("configs.txt", "r")
+    cFile = open(config_name, "r")
     #cFile = open("configs_extras.txt", "r")
     log_file = open(file_name, "a+")
     configs = list()
@@ -37,8 +38,8 @@ def main():
 
     if (int(sys.argv[1]) == 0):
         epsilon = 0.05
-        if (len(sys.argv) > 3):
-            epsilon = float(sys.argv[3])
+        if (len(sys.argv) > 4):
+            epsilon = float(sys.argv[4])
         bound = 100000
         message = "Running epsilon greedy algorithm with epsilon = %f," \
                 " and bounded by %d pulls...\n" %(epsilon, bound)
@@ -55,9 +56,9 @@ def main():
         lambda_ = 9
         bound = 100000
         delta = (((math.sqrt(1 + (conf/2)) - 1)**2)/(4*c_e)) 
-        
-        if (len(sys.argv) > 3):
-            bound = int(sys.argv[3])
+
+        if (len(sys.argv) > 4):
+            bound = int(sys.argv[4])
 
         message = "Running lil-UCB algorithm with epsilon: %.3f, confidence:" \
                 " %.3f, beta: %d, lambda: %d...\n" %( e, conf, beta, lambda_)
@@ -67,8 +68,8 @@ def main():
                 e, lambda_, beta , 1-conf, log_file, bound)
     else:
         bound = 50000
-        if (len(sys.argv) > 3):
-            bound = int(sys.argv[3])
+        if (len(sys.argv) > 4):
+            bound = int(sys.argv[4])
         message = "Running sequential-halving algorithm bounded " \
                 "by %d pulls...\n" %(bound)
         print(message)
