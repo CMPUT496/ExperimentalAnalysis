@@ -6,6 +6,7 @@ import sequential_halving
 import datetime
 import sys
 import math
+import logger
 
 
 def main():
@@ -20,7 +21,7 @@ def main():
 
     cFile = open("configs.txt", "r")
     #cFile = open("configs_extras.txt", "r")
-    log_file = open(file_name, "a+")
+    log_file = logger.open_log(file_name)
     configs = list()
 
     # construct a list of config arrays representing all tha arms
@@ -77,9 +78,7 @@ def main():
                 configs, bound, log_file)
 
     log_file.write("--- END OF EXPERIMENT ---\n\n")
-    print("BEST ARM:")
-    print(best_arm)
-    log_file.close()
+    logger.close_log(log_file) 
 
 
 if __name__=="__main__":

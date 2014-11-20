@@ -5,8 +5,7 @@ import math
 import operator
 
 def get_actual_max(arms):
-    arms_copy = arms
-    arms_copy.sort(key=operator.attrgetter('config_mu'), reverse=True)
+    arms_copy = sorted(arms, key=operator.attrgetter('config_mu'), reverse=True)
     return arms_copy[0]
 
 def calculate_delta(arms, actual_max):

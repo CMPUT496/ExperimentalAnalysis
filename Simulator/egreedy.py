@@ -1,4 +1,5 @@
 import numpy
+import logger
 import random
 import sim
 import operator
@@ -14,8 +15,7 @@ def pick_arm(arms, epsilon):
         return random.randint(0, len(arms) - 1)
 
 def get_actual_max(arms):
-    arms_copy = arms
-    arms_copy.sort(key=operator.attrgetter('config_mu'), reverse=True)
+    arms_copy = sorted(arms, key=operator.attrgetter('config_mu'), reverse=True)
     return arms_copy[0]
 
 def calculate_delta(arms, actual_max):
@@ -38,9 +38,10 @@ def epsilon_greedy(students, arms, bound, epsilon, log_file):
         s_arm.set_config_mu(students)
         s.append(s_arm)
 
+    # find actual max arm, calculate deltas and log 
     max_arm = get_actual_max(s)
-    # set deltas
     calculate_delta(s, max_arm)
+    logger.log_arms(log_file, s)
 
     for i in range(bound):
         # because we are not using a simple numpy.array we will sort
@@ -59,13 +60,6 @@ def epsilon_greedy(students, arms, bound, epsilon, log_file):
         # sort the arms
         s.sort(key=operator.attrgetter('average'), reverse=True)
 
-    # return the best arm
-    for arm in s:
-        log_file.write("ARM: %s\tAVERAGE: %f\tCONFIGMU: %f\tDELTA: %f\n"
-                %(str(arm), arm.get_average(), arm.get_config_mu(), arm.get_delta()))
-
-    arm = s[0]
-    log_file.write("\nBEST ARM: %s\tAVERAGE: %f\tCONFIGMU: %f\tDELTA: %f\n"
-            %(str(arm), arm.get_average(),arm.get_config_mu(), arm.get_delta()))
-
+    # log and return the best arm
+    logger.log_best_arm(log_file, s[0], bound)
     return str(s[0])
