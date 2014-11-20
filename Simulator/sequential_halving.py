@@ -1,6 +1,7 @@
 import math
 import numpy
 import sim
+import logger
 import operator
 
 def get_actual_max(arms):
@@ -39,12 +40,17 @@ def sequential_halving(students, arms, bound, log_file):
     # set deltas
     calculate_delta(s[0], actual_max)
 
+    # log all arms
+    logger.log_arms(log_file, s[0])
+
+    current_pulls = 0
     # run through iterations of algorithm
     for r in range(int(math.ceil(math.log(len(arms), 2)))):
 
         # compute the pulls per arm per iteration
         pulls_per_arm = int(math.floor(bound / (len(s[r])
                 * math.ceil(math.log(len(arms), 2)))))
+        current_pulls += pulls_per_arm + 1
 
         # sample each arm pulls_per_arm times and average results
         for i in range(len(s[r])):
@@ -59,14 +65,10 @@ def sequential_halving(students, arms, bound, log_file):
         # create next iteration which the upper half of the sorted list
         s.append(s[r][int(math.ceil(len(s[r])/2)):])
 
-        # log the current array s
-        log_file.write("\nINDEX: %2d -- PULLS PER ARM: %d\n" %(r, pulls_per_arm))
-        for arm in s[r+1]:
-            log_file.write("ARM: %s\tAVERAGE: %f\tCONFIGMU: %f\tDELTA: %f\n"
-                    %(str(arm), arm.get_average(),arm.get_config_mu(), arm.get_delta()))
+        # log the current empirical best arm
+        logger.log_best_arm(log_file, s[r][len(s[r]) - 1], current_pulls)  
 
     arm = s[int(math.ceil(math.log(len(arms), 2)))][0]
-    log_file.write("\nBEST ARM: %s\tAVERAGE: %f\tCONFIGMU: %f\tDELTA: %f\n"
-            %(str(arm), arm.get_average(),arm.get_config_mu(), arm.get_delta()))
+    logger.log_best_arm(log_file, arm, bound)
 
-    return s[int(math.ceil(math.log(len(arms), 2)))][0]
+    return arm 

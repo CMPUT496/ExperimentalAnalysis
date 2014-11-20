@@ -58,8 +58,13 @@ def epsilon_greedy(students, arms, bound, epsilon, log_file):
                 s[j].get_total_reward() / s[j].get_num_pulls())
 
         # sort the arms
+        current_max = s[0]
         s.sort(key=operator.attrgetter('average'), reverse=True)
+        if current_max != s[0]:
+            # log current best arm
+            logger.log_best_arm(log_file, s[0], i)    
 
-    # log and return the best arm
-    logger.log_best_arm(log_file, s[0], bound)
+    # log current best arm
+    logger.log_best_arm(log_file, s[0], bound)    
+
     return str(s[0])

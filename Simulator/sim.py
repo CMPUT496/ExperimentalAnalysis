@@ -85,6 +85,13 @@ class LineConfig():
     def get_delta(self):
         return self.delta
 
+    def __eq__(self, other):
+        return (self.ticks == other.get_ticks() 
+                and self.fractions == other.get_fractions()
+                and self.hints == other.get_hints()
+                and self.target == other.get_target()
+                and self.label == other.get_label())
+
     def __str__(self):
         return "<%d, %d, %d, %d, %d>" %(self.ticks, self.fractions, self.hints, self.target, self.label)
 

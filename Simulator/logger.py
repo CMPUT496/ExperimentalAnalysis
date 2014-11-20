@@ -14,7 +14,7 @@ def log_arms(log_file, arms):
         log_file.write(log) 
 
 def log_best_arm(log_file, arm, pulls):
-    log = ("\nBEST ARM: %s\tAVERAGE: %f\tCONFIGMU: %f\tDELTA: %f\t" \
+    log = ("BEST ARM: %s\tAVERAGE: %f\tCONFIGMU: %f\tDELTA: %f\t" \
             "NUM PULLS: %d\n" %(str(arm), arm.get_average(),
             arm.get_config_mu(), arm.get_delta(), pulls))
     log_file.write(log)
