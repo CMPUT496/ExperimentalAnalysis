@@ -11,8 +11,26 @@
 #       ex. log_file.txt
 #       will be stored in Logs/log_file.txt
 
+alg=$1
+iterations=$2
+logfile=$3
+extra=$4
 COUNTER=0
-while [ $COUNTER -lt $2 ]; do
-    python main.py $1 $3
+
+while [ $COUNTER -lt $iterations ]; do
+    if [ $alg -eq 0 ];
+    then
+        # e-greedy
+        : ${extra:=0.1}
+        python main.py $alg $logfile $extra
+    elif [ $alg -eq 1 ];
+    then 
+        # lil-UCB
+        python main.py $alg $logfile
+    else
+        # sequential halving
+        : ${extra:=50000}
+        python main.py $alg $logfile $extra
+    fi
     let COUNTER=COUNTER+1
 done;
