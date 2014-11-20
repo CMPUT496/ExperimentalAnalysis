@@ -86,7 +86,7 @@ class LineConfig():
         return self.delta
 
     def __str__(self):
-        return "<%d, %d, %d, %d>" %(self.ticks, self.hints, self.target, self.label)
+        return "<%d, %d, %d, %d, %d>" %(self.ticks, self.fractions, self.hints, self.target, self.label)
 
 
 class Student(LineConfig):
