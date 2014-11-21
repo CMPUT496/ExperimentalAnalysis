@@ -1,4 +1,8 @@
 import sys
+import operator
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_pdf import PdfPages
 
 def parse_deltas(log_file, delta_list):
     delta = 0.0
@@ -35,11 +39,55 @@ def success_rate(delta_list, threshold):
             success += 1.0
     return success / len(delta_list)
 
+def plot_egreedy_delta_progress(d_list, pp):
+    d_list.sort(key=lambda x: x[1])
+    deltas = list()
+    pulls = list()
+
+    delta_sum = 0.0
+    count = 1
+    for i in range(len(d_list)):
+        delta_sum += d_list[i][0]
+        print(d_list[i][0])
+        if (i == len(d_list)-1 or d_list[i][1] == d_list[i+1][1]):
+            count += 1
+        else:
+            deltas.append(delta_sum / count)
+            pulls.append(d_list[i][1])
+            delt_sum = 0.0
+            count = 1
+    
+    plt.plot(pulls, deltas, '-')
+    plt.axis([0,10000,0,0.5])
+    plt.savefig(pp, format='pdf')
+
+def plot_seqhav_delta_progress(d_list, pp):
+    d_list.sort(key=lambda x: x[1])
+    deltas = list()
+    pulls = list()
+    
+    delta_sum = 0.0
+    count = 1
+    for i in range(len(d_list)):
+        delta_sum += d_list[i][0]
+        if (i == len(d_list)-1 or d_list[i][1] == d_list[i+1][1]):
+            count += 1
+        else:
+            deltas.append(delta_sum / count)
+            pulls.append(d_list[i][1])
+            delta_sum = 0.0
+            count = 1
+    plt.plot(pulls, deltas, '-')
+    plt.axis([0,10000,0,0.2])
+    plt.savefig(pp, format='pdf')
+
 def main():
     # open log file, new output file
-    if (len(sys.argv) > 2):
-        log_file = open(sys.argv[1], 'r')
-        #new_file = open(sys.argv[2], 'w')
+    if (len(sys.argv) > 3):
+        alg = int(sys.argv[1])
+        log_file = open(sys.argv[2], 'r')
+        new_file = open(sys.argv[3], 'w')
+        pp = PdfPages('plots_' + sys.argv[3]) 
     else:
         print("log file, and new file arguments are required, exiting...")
         sys.exit(0)
@@ -53,10 +101,16 @@ def main():
     print("Average Best Arm Delta: %f" %(average_delta(best_delta_list)))
     print("Success Rate with threshold: %f, is: %f" 
             %(threshold, success_rate(best_delta_list, threshold)))
+    
+    if alg == 0:
+        plot_egreedy_delta_progress(delta_list, pp)
+    else:
+        plot_seqhav_delta_progress(delta_list, pp)
 
     # close 
     log_file.close()
-    #new_file.close()    
+    new_file.close()    
+    pp.close()
 
 if __name__=="__main__":
     main()

@@ -69,6 +69,7 @@ def sequential_halving(students, arms, bound, log_file):
         logger.log_pulled_arm(log_file, s[r][len(s[r]) - 1], current_pulls)  
 
     arm = s[int(math.ceil(math.log(len(arms), 2)))][0]
+    logger.log_pulled_arm(log_file, arm, bound)
     logger.log_best_arm(log_file, arm, bound)
 
     return arm
