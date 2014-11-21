@@ -18,6 +18,12 @@ def log_arms(log_file, arms):
                 %(str(arm), arm.get_config_mu(), arm.get_delta()))
         log_file.write(log)
 
+def log_pulled_arm(log_file, arm, pulls):
+    log = ("PULLED ARM: %s\tAVERAGE: %f\tCONFIGMU: %f\tDELTA: %f\t" \
+            "NUM PULLS: %d\n" %(str(arm), arm.get_average(),
+            arm.get_config_mu(), arm.get_delta(), pulls))
+    log_file.write(log)
+
 def log_best_arm(log_file, arm, pulls):
     log = ("BEST ARM: %s\tAVERAGE: %f\tCONFIGMU: %f\tDELTA: %f\t" \
             "NUM PULLS: %d\n" %(str(arm), arm.get_average(),

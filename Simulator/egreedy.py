@@ -62,7 +62,7 @@ def epsilon_greedy(students, arms, bound, epsilon, log_file):
         s.sort(key=operator.attrgetter('average'), reverse=True)
         if current_max != s[0] or i == 0:
             # log current best arm
-            logger.log_best_arm(log_file, s[0], i+1)
+            logger.log_pulled_arm(log_file, s[0], i+1)
 
     # log current best arm
     logger.log_best_arm(log_file, s[0], bound)

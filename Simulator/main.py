@@ -35,9 +35,11 @@ def main():
 
     if (int(sys.argv[1]) == 0):
         epsilon = 0.05
+        bound = 100000
         if (len(sys.argv) > 4):
             epsilon = float(sys.argv[4])
-        bound = 100000
+        if (len(sys.argv) > 5):
+            bound = int(sys.argv[5])
         message = "Running epsilon greedy algorithm with epsilon = %f," \
                 " and bounded by %d pulls...\n" %(epsilon, bound)
         print(message)
