@@ -30,10 +30,6 @@ def main():
         config = numpy.asarray([int(n) for n in line.split()])
         configs.append(config)
 
-    # Header for the log file
-    time = datetime.datetime.now().time()
-    log_file.write("%s" %(time.strftime("%Y-%m-%d %H:%M:%S")))
-
     # retrieve list of students for this run
     students = sim.get_student_list(log_file)
 
@@ -56,7 +52,7 @@ def main():
         beta = 1
         lambda_ = 9
         bound = 100000
-        delta = (((math.sqrt(1 + (conf/2)) - 1)**2)/(4*c_e)) 
+        delta = (((math.sqrt(1 + (conf/2)) - 1)**2)/(4*c_e))
 
         if (len(sys.argv) > 4):
             bound = int(sys.argv[4])
@@ -79,7 +75,7 @@ def main():
                 configs, bound, log_file)
 
     log_file.write("--- END OF EXPERIMENT ---\n\n")
-    logger.close_log(log_file) 
+    logger.close_log(log_file)
 
 
 if __name__=="__main__":
