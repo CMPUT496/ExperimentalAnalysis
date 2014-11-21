@@ -16,6 +16,7 @@ iterations=$2
 logfile=$3
 conffile=$4
 extra=$5
+egreedybound=$6
 COUNTER=0
 
 while [ $COUNTER -lt $iterations ]; do
@@ -23,7 +24,8 @@ while [ $COUNTER -lt $iterations ]; do
     then
         # e-greedy
         : ${extra:=0.1}
-        python main.py $alg $logfile $conffile $extra
+        : ${egreedybound:=100000}
+        python main.py $alg $logfile $conffile $extra $egreedybound
     elif [ $alg -eq 1 ];
     then 
         # lil-UCB

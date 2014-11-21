@@ -38,7 +38,7 @@ def epsilon_greedy(students, arms, bound, epsilon, log_file):
         s_arm.set_config_mu(students)
         s.append(s_arm)
 
-    # find actual max arm, calculate deltas and log 
+    # find actual max arm, calculate deltas and log
     max_arm = get_actual_max(s)
     calculate_delta(s, max_arm)
     logger.log_arms(log_file, s)
@@ -60,11 +60,11 @@ def epsilon_greedy(students, arms, bound, epsilon, log_file):
         # sort the arms
         current_max = s[0]
         s.sort(key=operator.attrgetter('average'), reverse=True)
-        if current_max != s[0]:
+        if current_max != s[0] or i == 0:
             # log current best arm
-            logger.log_best_arm(log_file, s[0], i)    
+            logger.log_pulled_arm(log_file, s[0], i+1)
 
     # log current best arm
-    logger.log_best_arm(log_file, s[0], bound)    
+    logger.log_best_arm(log_file, s[0], bound)
 
     return str(s[0])
