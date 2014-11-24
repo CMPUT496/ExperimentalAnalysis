@@ -107,7 +107,7 @@ class Student(LineConfig):
     def __init__(self, ticks, fractions, hints, target, label, name, prob):
         # call line_config
         LineConfig.__init__(self, ticks, fractions, hints, target, label)
-        self.s_lambda = numpy.random.normal(1, 0.1)
+        self.s_lambda = numpy.random.normal(1, 0.2)
         self.name = name
         self.prob = prob
 

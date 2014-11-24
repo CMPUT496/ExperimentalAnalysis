@@ -1,5 +1,3 @@
-
-
 def reformat_logs(logFile, newLog):
     delta_val = -1
     count = 0
@@ -16,7 +14,7 @@ def reformat_logs(logFile, newLog):
 
 
 def averageResults(logFile):
-	newLog = open("lilucb_50runs_conf1_averages_nov22", "r")
+	newLog = open("lilucb_50runs_base_largedist_averages_nov22", "w")
 	averages = [0 for i in range(1001)]
 	last_val = 0
 	lc = 0
@@ -36,7 +34,10 @@ def averageResults(logFile):
 		newLog.write("%f\n" %(averages[i]/50))
 
 
-f = open("lilucb_50runs_b1_Nov20.out", "r")
-f2 = open("condensed_results", "r")
+f = open("lilucb_50runs_baseconf_overdist_Nov22.out", "r")
+f2 = open("condensed_results", "w")
 reformat_logs(f, f2)
+f.close()
+f2.close()
+f2 = open("condensed_results", "r")
 averageResults(f2)
