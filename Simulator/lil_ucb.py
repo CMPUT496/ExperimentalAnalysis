@@ -36,7 +36,7 @@ def lil_ucb(students, arms, delta, epsilon, lambda_p, beta, sigma, log_file, max
     for i in range(n):
         T[i] = 1
         mu[i] = sim.simulate(armList[i], students, log_file) #pull the arm
-        log_file.write("ITERATION: %6d ARM: %s\tCONFIGMU: %f\tDELTA: %f\n" %(timestep, str(armList[i]), armList[i].get_config_mu(), armList[i].get_delta()))
+        log_file.write("ARM: %s\tDELTA: %f\n" %(str(armList[i]), armList[i].get_delta()))
         timestep += 1
 
     prevIndex = -1;
@@ -74,10 +74,11 @@ def lil_ucb(students, arms, delta, epsilon, lambda_p, beta, sigma, log_file, max
 
         # if(timestep % 10000 == 0):
         #     log_file.write("ITERATION: %3d ARM: %s\tCONFIGMU: %f\tDELTA: %f\n" %(timestep//100, str(armList[index]), armList[index].get_config_mu(), armList[index].get_delta()))
-        if(prevIndex != index):
+        #if(prevIndex != index):
+        if(timestep % 100 == 0):
             log_file.write("ITERATION: %6d ARM: %s\tCONFIGMU: %f\tDELTA: %f\n" %(timestep, str(armList[index]), armList[index].get_config_mu(), armList[index].get_delta()))
 
-        prevIndex = index
+        #prevIndex = index
         if(timestep == max_pulls):
             break
 
