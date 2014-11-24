@@ -147,6 +147,7 @@ def plot_seqhav_delta_progress(d_list, pp):
 def plot_arm_distribution(arm_dist, pp):
     val = 0.
     plt.plot(arm_dist, np.zeros_like(arm_dist) + val, 'o')
+    plt.axis([0,1,-1,1])
     plt.savefig(pp, format='pdf')
     
 def main():
@@ -158,7 +159,7 @@ def main():
         delta_file = open('deltas_' + sys.argv[3], 'w')
         timestep_file = open('timestep_' + sys.argv[3], 'w')
         arm_file = open('arms_' + sys.argv[3], 'w')
-        # pp = PdfPages('plots_' + sys.argv[3]) 
+        pp = PdfPages('plots_' + sys.argv[3]) 
     else:
         print("log file, and new file arguments are required, exiting...")
         sys.exit(0)
@@ -176,7 +177,7 @@ def main():
     write_arms_to_file(arm_file, arm_dist)
     
     # plot the graphs and save them to pdfs
-    # plot_arm_distribution(arm_dist, pp)
+    plot_arm_distribution(arm_dist, pp)
     # if alg == 0:
     #     plot_egreedy_delta_progress(delta_list, pp)
     # else:
@@ -188,7 +189,7 @@ def main():
     delta_file.close()
     timestep_file.close()
     arm_file.close()
-    # pp.close()
+    pp.close()
 
 if __name__=="__main__":
     main()
