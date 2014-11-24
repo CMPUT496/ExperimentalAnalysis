@@ -20,6 +20,7 @@ def main():
         print("Not enough arguments")
         sys.exit(0)
 
+    print(config_name)
     cFile = open(config_name, "r")
     #cFile = open("configs_extras.txt", "r")
     log_file = logger.open_log(file_name)
