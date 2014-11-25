@@ -32,9 +32,9 @@ def main():
         configs.append(config)
 
     # retrieve list of students for this run
-    # students = sim.get_student_list(log_file)
-    students = list()
-    students.append(sim.Student(0, 0, 0, 1, 1, "Test", 1.0))
+    students = sim.get_student_list(log_file)
+    #students = list()
+    #students.append(sim.Student(0, 0, 0, 1, 1, "Test", 1.0))
 
 
     if (int(sys.argv[1]) == 0):
