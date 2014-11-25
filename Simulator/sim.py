@@ -128,7 +128,10 @@ def distance(arm, student):
     dist += 0.05 * (numpy.absolute(arm.get_hints() - student.get_hints()))
     dist += 0.5 * (numpy.absolute(arm.get_target() - student.get_target()))
     dist += 0.5 * (numpy.absolute(arm.get_label() - student.get_label()))
+    dist -= .01                 # add this line for small dist
+    dist = abs(dist)            # add this line for small dist
     dist *= student.get_lambda()
+    dist += 1                   # add this line for small dist
     return dist
 
 def probability(dist):
