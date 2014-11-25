@@ -2,7 +2,7 @@ def reformat_logs(logFile, newLog):
     delta_val = -1
     count = 0
     for line in logFile:
-        if(line[0] != 'I'):
+        if(line[0:2] != 'IT'):
 			if(line[0:5] == "--- E"):
 				newLog.write("\n")
 				#print( count)
@@ -41,14 +41,14 @@ def armDistribution(logFile, tempFile):
     tempFile.close()
 
 
-base = open("lilucb_50runs_conf2_Nov20.out", "r")
-temp = open("condensed_results", "w")
+base = open("lilucb_50runs_baseconf_Nov20.out", "r")
+temp = open("deltas_NON_summary_lilucb_base_nov25.data", "w")
 #outfile = open("lilucb_50runs_base_largedist_averages_nov22", "w")
-arm_out_file = open("arms_summary_lilucb_conf2_Nov25", "w")
-#reformat_logs(f, f2)
+#arm_out_file = open("arms_summary_lilucb_conf2_Nov25", "w")
+reformat_logs(base, temp)
 #averageResults(temp, outfile, 1001, 1)
-armDistribution(base, temp)
-temp = open("condensed_results", "r")
-averageResults(temp, arm_out_file,720, 6)
+#armDistribution(base, temp)
+#temp = open("condensed_results", "r")
+#averageResults(temp, arm_out_file,720, 6)
 temp.close()
 base.close()
