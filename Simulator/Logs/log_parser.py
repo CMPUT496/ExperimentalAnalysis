@@ -1,3 +1,4 @@
+import math
 import sys
 import operator
 import numpy as np
@@ -38,6 +39,24 @@ def write_deltas_to_file(delta_file, timestep_file, delta_list):
     for delta in delta_list:
         delta_file.write(str(delta[0]) + "\n")
         timestep_file.write(str(delta[1]) + "\n")
+
+def parse_all_arm_deltas(log_file, out_file):
+    flag = False
+
+    for line in log_file:
+        info = line.split()
+        if info and info[0] == 'ARM:':
+            flag = True
+            for i in range(len(info)):
+                var = info[i].strip('<>:,')
+                if var == "DELTA":
+                    delta = float(info[i+1].strip('<>:,'))
+                    out_file.write("%f\n" %(delta))
+        elif (info and info[0] != 'ARM:' and flag):
+            flag = False
+            out_file.write('\n')
+        else:
+            flag = False
 
 def parse_best_arm_deltas(log_file):
     best_delta_list = list()
@@ -80,6 +99,14 @@ def parse_arm_distribution(log_file):
     log_file.seek(0, 0)         # point to the start of the logfile
     return arm_configmus
 
+def calculate_arm_stdev(arm_configmus):
+    sample_mean = sum(arm_configmus) / len(arm_configmus)
+    sum_error = 0.0
+    for arm in arm_configmus:
+        sum_error += (arm - sample_mean)**2
+    st_dev = math.sqrt(sum_error/len(arm_configmus))    
+    return st_dev
+
 def write_arms_to_file(arm_file, arm_configmus):
     for arm in arm_configmus:
         arm_file.write(str(arm) + '\n')
@@ -94,13 +121,18 @@ def success_rate(delta_list, threshold):
             success += 1.0
     return success / len(delta_list)
 
-def write_summary_stats_to_file(summary_file, best_delta_list):
+def write_summary_stats_to_file(summary_file, best_delta_list, arm_configmus):
     # summary statistics
     threshold = 0.01
     summary_file.write("Average Best Arm Delta: %f\n" 
             %(average_delta(best_delta_list)))
     summary_file.write("Success Rate with threshold: %f, is: %f\n" 
             %(threshold, success_rate(best_delta_list, threshold)))
+
+    sample_mean = sum(arm_configmus) / len(arm_configmus)
+    st_dev = calculate_arm_stdev(arm_configmus)
+    summary_file.write("Arms Sample Mean: %f\n" %(sample_mean))
+    summary_file.write("Arms Standard Deviation: %f\n" %(st_dev))
 
 def plot_egreedy_delta_progress(d_list, pp):
     d_list.sort(key=lambda x: x[1])
@@ -157,27 +189,31 @@ def main():
         log_file = open(sys.argv[2], 'r')
         summary_file = open(sys.argv[3], 'w')
         delta_file = open('deltas_' + sys.argv[3], 'w')
+        regret_file = open('regrets_' + sys.argv[3], 'w')
         timestep_file = open('timestep_' + sys.argv[3], 'w')
         arm_file = open('arms_' + sys.argv[3], 'w')
-        pp = PdfPages('plots_' + sys.argv[3]) 
+        # pp = PdfPages('plots_' + sys.argv[3]) 
     else:
         print("log file, and new file arguments are required, exiting...")
         sys.exit(0)
+
+    # get the regrets for matthew
+    parse_all_arm_deltas(log_file, regret_file)
 
     # get how delta progresses over time (number of pulls)
     delta_list = parse_deltas(log_file)
     write_deltas_to_file(delta_file, timestep_file, delta_list)
     
-    # deltas (regrets) of the best arms
-    best_delta_list = parse_best_arm_deltas(log_file)
-    write_summary_stats_to_file(summary_file, best_delta_list)
-
     # arm distributions (configmus)
     arm_dist = parse_arm_distribution(log_file)
     write_arms_to_file(arm_file, arm_dist)
-    
+
+    # deltas (regrets) of the best arms
+    best_delta_list = parse_best_arm_deltas(log_file)
+    write_summary_stats_to_file(summary_file, best_delta_list, arm_dist)
+
     # plot the graphs and save them to pdfs
-    plot_arm_distribution(arm_dist, pp)
+    # plot_arm_distribution(arm_dist, pp)
     # if alg == 0:
     #     plot_egreedy_delta_progress(delta_list, pp)
     # else:
@@ -185,11 +221,12 @@ def main():
 
     # close 
     log_file.close()
+    regret_file.close()
     summary_file.close()    
     delta_file.close()
     timestep_file.close()
     arm_file.close()
-    pp.close()
+    # pp.close()
 
 if __name__=="__main__":
     main()

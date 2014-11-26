@@ -1,2 +1,4 @@
 Average Best Arm Delta: 0.004450
 Success Rate with threshold: 0.010000, is: 0.800000
+Arms Sample Mean: 0.505781
+Arms Standard Deviation: 0.058326
