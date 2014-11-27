@@ -5,3 +5,4 @@
 ./run_sim 1 50 lilucb_50runs_conf2_Nov20.out configs_2.in 
 
 ./run_sim 1 50 lilucb_50runs_baseconf_overdist_Nov22.out configs_base.in 
+./run_sim 1 50 lilucb_50runs_baseconf_underdist_Nov22.out configs_base.in
