@@ -2,7 +2,7 @@ import math
 
 #THIS SHIT AINT TESTED TYLER
 
-def get_errors(outfile, in_file, averages, confidence = 0.05, n = 50, configs = 120):
+def get_error_bars(outfile, in_file, averages, confidence = 0.05, n = 50, configs = 120):
     # The configs file should be a list of the average regret for each arm,
     #   for each distribution. 
     #   i.e. The 120 configuration averages, as seen in files like:
@@ -36,6 +36,7 @@ def get_errors(outfile, in_file, averages, confidence = 0.05, n = 50, configs = 
             s_dev_list[arm_index] += (v**2)/(n - 1)
             arm_index += 1
 
+
     variance = list() #rename for clarity
     for s in s_dev_list:
         variance.append(s**2)
@@ -44,14 +45,14 @@ def get_errors(outfile, in_file, averages, confidence = 0.05, n = 50, configs = 
     for i in range(configs):
         val = c
         val *= math.sqrt(variance[i]/n)
-        outfile.write("%f\n",val)
+        outfile.write("%f\n" %(val))
 
 
 
 
-out_f = open("TEST_errorbars_lilucb_base_nov25.data", "w")
-configs = open("arms_summary_lilucb_baseconf_Nov25.data", "r")
-in_file = open("deltas_NON_summary_lilucb_base_nov25.data", "r") #This should be the temporarp file in arm distribution,
+out_file = open("errorbars_seqhav_largedist_Nov27.data", "w")
+arms_averages = open("arms_summary_seqhav_largedist_November26.data", "r")
+in_file = open("regrets_summary_seqhav_largedist_November26.data", "r") #This should be the temporarp file in arm distribution,
                                                                 # not the regret values per 100th arm pull
-get_errors(out_f,in_file, configs)
+get_error_bars(out_file,in_file, arms_averages)
 
