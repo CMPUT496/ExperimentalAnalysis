@@ -56,6 +56,7 @@ def sequential_halving(students, arms, bound, log_file):
         for i in range(len(s[r])):
             total = 0.0
             for j in range(pulls_per_arm):
+                s[r][i].set_num_pulls(s[r][i].get_num_pulls() + 1)
                 total += sim.simulate(s[r][i], students, log_file)
             s[r][i].set_average(total/pulls_per_arm)
 
@@ -72,4 +73,7 @@ def sequential_halving(students, arms, bound, log_file):
     logger.log_pulled_arm(log_file, arm, bound)
     logger.log_best_arm(log_file, arm, bound)
 
+    for arm in s[0]:
+        logger.log_num_pulls(log_file, arm)
+    
     return arm
