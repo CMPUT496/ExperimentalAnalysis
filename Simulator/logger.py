@@ -29,3 +29,8 @@ def log_best_arm(log_file, arm, pulls):
             "NUM PULLS: %d\n" %(str(arm), arm.get_average(),
             arm.get_config_mu(), arm.get_delta(), pulls))
     log_file.write(log)
+
+def log_num_pulls(log_file, arm):
+    log = ("ARMPULLCOUNT: %s\t %d\n" %(str(arm), arm.get_num_pulls()))
+    log_file.write(log)
+
