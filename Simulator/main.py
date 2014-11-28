@@ -11,11 +11,11 @@ import logger
 
 def main():
     if len(sys.argv) > 3:
-        file_name = "logs/data/"
+        file_name = "logs/raw_data/"
         file_name += sys.argv[2]
         config_name = "configs/" + sys.argv[3]
     elif len(sys.argv) > 1:
-        file_name = "logs/data/log_file.txt"
+        file_name = "logs/raw_data/log_file.txt"
     else:
         print("Not enough arguments")
         sys.exit(0)
