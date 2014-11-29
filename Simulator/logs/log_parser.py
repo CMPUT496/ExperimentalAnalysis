@@ -9,6 +9,7 @@ def parse_regrets(log_file):
     pull_list = list()
     pull_dict = dict()
     pull_count = dict()
+    log_file.seek(0, 0)
 
     for line in log_file:
         info = line.split()
@@ -23,7 +24,7 @@ def parse_regrets(log_file):
                         pull_dict[pull] += regret 
                         pull_count[pull] += 1
                     else:
-                        pull_dict[pull] = delta
+                        pull_dict[pull] = regret 
                         pull_count[pull] = 1
                         pull_list.append(pull)
     
@@ -60,6 +61,7 @@ def parse_every_deltas(log_file, regret_file):
 
 def parse_best_arm_deltas(log_file):
     best_delta_list = list()
+    log_file.seek(0, 0)
 
     for line in log_file:
         info = line.split()
@@ -100,7 +102,7 @@ def parse_arm_distribution(log_file, arm_file, pull_count_file):
 
     log_file.seek(0,0)
     for line in log_file:
-        info = line
+        info = line.split()
         if info and info[0] == 'ARMPULLCOUNT:':
             arm = (info[1].strip('<,>') + info[2].strip('<,>') 
                     + info[3].strip('<,>') + info[4].strip('<,>') 
