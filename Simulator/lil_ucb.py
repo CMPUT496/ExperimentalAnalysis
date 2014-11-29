@@ -45,10 +45,10 @@ def lil_ucb(students, arms, delta, epsilon, lambda_p, beta, sigma, log_file, max
         done = False
         total_pulls = sum(T)
         timestep += 1
-
         for i in range(n):
             #check if an arm has been pulled more than all others combined
-            if T[i] > 1 + lambda_p*(total_pulls - T[i]):
+            print("t[i]: %d >= %d\n" %(T[i], (1 + lambda_p*(total_pulls - T[i]))))
+            if T[i] >= 1 + lambda_p*(total_pulls - T[i]):
                 done = True
                 break
 

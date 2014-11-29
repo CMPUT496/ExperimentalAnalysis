@@ -35,11 +35,13 @@ def armDistribution(log_file, out_file, step):
     #used for regret summary
     count = 0
     for line in log_file:
-        if(line[0] == 'A'):
+        if(line[0:4] == 'ARM:'):
             if(count%step== 0):
                 temp = line.split(' ')
                 out_file.write(temp[-1])
-        if(line[0:5] == "--- E"):
+        # if(line[0:5] == "--- E"):
+        #         out_file.write("\n")
+        if(line[0:7] == "Running" and count > 10):
                 out_file.write("\n")
         count += 1
     out_file.close()
@@ -51,29 +53,64 @@ def remove_duplicates(in_file, out_file):
             temp = line
             out_file.write(line)
 
+def get_arm_pull_count(in_file, out_file):
+    pulls = [0 for i in range(120)]
+    index = 0
+    for i,line in enumerate(in_file):
+        if(line[0:4] == "ARMP"):
+            temp = line.split()
+            pulls[index%120] += int(temp[-1])
+            index += 1
+
+        if(line[0:7] == "Running" and i > 10):
+            index = 0
+
+    for i in range(120):
+        out_file.write("%d\n" %(pulls[i]))
 
 
-# base = open("lilucb_50runs_conf2_Nov20.out", "r")
-# log_file = open("regrets_summary_lilucb_config2_nov27.data", "w")
 #arm_out_file = open("arms_summary_lilucb_largedist_Nov27.data", "w")
 #summary_file = open("pull_summary_lilucb_config2_nov27.data", "w")
 
-#reformat_logs(base, summary_file)
-#armDistribution(base, log_file, 6)
-#summary_file.close()
 
-#Delta average
-# summary_file = open("pull_summary_lilucb_largedist_nov27.data", "r")
-# delta_out_file = open("deltas_summary_lilucb_largedist_nov27.data", "w")
-# averageResults(summary_file, delta_out_file,1001, 1)
-
-# base.close()
+#Regrets
+# raw_file = open("raw_data/lilucb_50runs_largedist_Nov28.out", "r")
+# log_file = open("regrets/regrets_lilucb_50runs_largedist_November29.data", "w")
+# reformat_logs(raw_file, log_file)
+# raw_file.close()
 # log_file.close()
-#arm_out_file.close()
+
+
+# Average Regrets
+# summary_file = open("regrets/regrets_lilucb_50runs_extraparams2_November29.data", "r")
+# averages_file = open("average_regrets/average_regret_lilucb_50runs_extraparams2_November29.data", "w")
+# averageResults(summary_file, averages_file,1001, 1)
 # summary_file.close()
-# delta_out_file.close()
+# averages_file.close()
 
 #remove_duplicates
-in_f = open("regrets_summary_seqhav_config1_November23.data", "r")
-out_f = open("regrets_summary_seqhav_config1_November27.data", "w")
-remove_duplicates(in_f, out_f)
+# in_f = open("regrets_summary_seqhav_config1_November23.data", "r")
+# out_f = open("regrets_summary_seqhav_config1_November27.data", "w")
+# remove_duplicates(in_f, out_f)
+
+# Arm Distributions all runs
+# raw_data = open("raw_data/lilucb_50runs_largedist_Nov28.out", "r")
+# temp_file = open("temporary_files/arms_distributions_per_run_lilucb_largedist_November29.data", "w")
+# armDistribution(raw_data, temp_file, 1)
+# raw_data.close()
+# temp_file.close()
+
+
+# Arm Distributions averages
+# arm_vals = open("temporary_files/arms_distributions_per_run_lilucb_largedist_November29.data", "r")
+# averages = open("arm_distributions/arms_lilucb_50runs_largedist_November29.data", "w")
+# averageResults(arm_vals, averages, 120, 1)
+# arm_vals.close()
+# averages.close()
+
+# Arm pull Counts
+raw_data = open("raw_data/lilucb_50runs_baseconfig_Nov28.out", "r")
+pull_file = open("arm_distributions/pullcount_lilucb_50runs_baseconfig_November29.data", "w")
+get_arm_pull_count(raw_data, pull_file)
+raw_data.close()
+pull_file.close()
