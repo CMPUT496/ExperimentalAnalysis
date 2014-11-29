@@ -32,7 +32,7 @@ def parse_regrets(log_file):
         regret = pull_dict[pull] / pull_count[pull]
         regret_list.append((regret, pull))        
     log_file.seek(0, 0)
-    return delta_list
+    return regret_list 
 
 def write_deltas_to_file(delta_file, timestep_file, delta_list, seqhav_flag):
     for delta in delta_list:
@@ -40,8 +40,8 @@ def write_deltas_to_file(delta_file, timestep_file, delta_list, seqhav_flag):
         if seqhav_flag:
             timestep_file.write(str(delta[1]) + "\n")
 
-def parse_every_deltas(log_file, regret_file)
-    log.seek(0,0)
+def parse_every_deltas(log_file, regret_file):
+    log_file.seek(0,0)
     flag = False
     for line in log_file:
         info = line.split()
@@ -54,7 +54,7 @@ def parse_every_deltas(log_file, regret_file)
                     regret_file.write("%f\n" %(delta))
         elif (info and info[0] != 'PULLED' and flag):
             flag = False
-            out_file.write('\n')
+            regret_file.write('\n')
         else:
             flag = False
 
@@ -71,9 +71,10 @@ def parse_best_arm_deltas(log_file):
     log_file.seek(0, 0)
     return best_delta_list
 
-def parse_arm_distribution(log_file):
+def parse_arm_distribution(log_file, arm_file, pull_count_file):
     arm_dict = dict()           # holds average configmu for an arm
     arm_count = dict()          # holds how many times an arm has occurred
+    arm_pulls = dict()
     arm_list = list()           # holds list of all arms, used for iteration
     arm_configmus = list()      # the list of average configmus to be returned 
     
@@ -95,12 +96,22 @@ def parse_arm_distribution(log_file):
                         arm_list.append(arm)
                         arm_count[arm] = 1
                         arm_dict[arm] = configmu 
+                        arm_pulls[arm] = 0
 
-    #log_file.seek(0,0)
-    #for line in log_file:
-    #    info = line
+    log_file.seek(0,0)
+    for line in log_file:
+        info = line
+        if info and info[0] == 'ARMPULLCOUNT:':
+            arm = (info[1].strip('<,>') + info[2].strip('<,>') 
+                    + info[3].strip('<,>') + info[4].strip('<,>') 
+                    + info[5].strip('<,>'))
+            arm_pulls[arm] += int(info[6].strip('<,>'))    
+
     for arm in arm_list:
         arm_configmus.append(arm_dict[arm] / arm_count[arm])
+        arm_file.write(str(arm_dict[arm] / arm_count[arm]) + '\n')
+        pull_count_file.write(str(arm_pulls[arm] / arm_count[arm]) + '\n')
+        
     log_file.seek(0, 0)         # point to the start of the logfile
     return arm_configmus
 
@@ -112,9 +123,9 @@ def calculate_arm_stdev(arm_configmus):
     st_dev = math.sqrt(sum_error/len(arm_configmus))    
     return st_dev
 
-def write_arms_to_file(arm_file, arm_configmus):
-    for arm in arm_configmus:
-        arm_file.write(str(arm) + '\n')
+#def write_arms_to_file(arm_file, arm_configmus):
+#    for arm in arm_configmus:
+#        arm_file.write(str(arm) + '\n')
 
 def average_delta(d_list):
     return sum(d_list)/len(d_list)
@@ -143,7 +154,7 @@ def main():
     # open log file, new output file
     if (len(sys.argv) > 2):
         alg = int(sys.argv[1])
-        log_file = open(sys.argv[2] + '.log', 'r')
+        log_file = open('./raw_data/' + sys.argv[2] + '.log', 'r')
         summary_file = open('summaries/summary_' + sys.argv[2] + '.data', 'w')
         regret_file = open('regrets/regrets_' + sys.argv[2] + '.data', 'w')
         average_regret_file = open('average_regrets/average_regret_' + sys.argv[2] + '.data', 'w')
@@ -166,9 +177,9 @@ def main():
         write_deltas_to_file(average_regret_file, None, delta_list, False)
     
     # arm distributions (configmus)
-    arm_dist = parse_arm_distribution(log_file)
+    arm_dist = parse_arm_distribution(log_file, arm_file, arm_pull_file)
     
-    write_arms_to_file(arm_file, arm_dist)
+    # write_arms_to_file(arm_file, arm_dist)
 
     # deltas (regrets) of the best arms
     best_delta_list = parse_best_arm_deltas(log_file)
@@ -176,11 +187,13 @@ def main():
 
     # close 
     log_file.close()
+    average_regret_file.close()
     regret_file.close()
     summary_file.close()    
-    delta_file.close()
-    timestep_file.close()
     arm_file.close()
+    arm_pull_file.close()
+    if alg == 1:
+        timestep_file.close()
 
 if __name__=="__main__":
     main()
