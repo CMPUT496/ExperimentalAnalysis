@@ -108,7 +108,7 @@ class Student(LineConfig):
         # call line_config
         LineConfig.__init__(self, ticks, fractions, hints, target, label)
         # large lambda settins (1, 5), regular (1, .1)
-        self.s_lambda = numpy.random.normal(1, 5)
+        self.s_lambda = numpy.random.normal(1, .1)
         self.name = name
         self.prob = prob
 
@@ -129,11 +129,11 @@ def distance(arm, student):
     dist += 0.05 * (numpy.absolute(arm.get_hints() - student.get_hints()))
     dist += 0.5 * (numpy.absolute(arm.get_target() - student.get_target()))
     dist += 0.5 * (numpy.absolute(arm.get_label() - student.get_label()))
-    dist -= .01                 # add this line for small dist
-    dist = abs(dist)            # add this line for small dist
+    #dist -= .01                 # add this line for small dist
+    #dist = abs(dist)            # add this line for small dist
     dist *= abs(student.get_lambda())
     #dist **= abs(3.5*student.get_lambda())      # add this line for large dist
-    dist += 1                   # add this line for small dist
+    #dist += 1                   # add this line for small dist
     return dist
 
 def probability(dist):
