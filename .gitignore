@@ -2,6 +2,7 @@
 *log_file*
 *.swp
 *.DS_Store
+*~*.xslx
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
