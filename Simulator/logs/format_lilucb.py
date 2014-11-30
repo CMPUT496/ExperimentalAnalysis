@@ -69,10 +69,6 @@ def get_arm_pull_count(in_file, out_file):
         out_file.write("%d\n" %(pulls[i]))
 
 
-#arm_out_file = open("arms_summary_lilucb_largedist_Nov27.data", "w")
-#summary_file = open("pull_summary_lilucb_config2_nov27.data", "w")
-
-
 #Regrets
 # raw_file = open("raw_data/lilucb_50runs_largedist_Nov28.out", "r")
 # log_file = open("regrets/regrets_lilucb_50runs_largedist_November29.data", "w")
