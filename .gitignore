@@ -2,7 +2,6 @@
 *log_file*
 *.swp
 *.DS_Store
-*Plots/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
