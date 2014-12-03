@@ -23,13 +23,22 @@ This contains our implementation of egreedy with a arm pull budget. `egreedy(stu
 
 This contains our implementation of sequential halving. `sequential_halving(students, arms, bound, log_file)` takes 4 arguments:
 * `students` is a list of student objects retrieved from the simulator in the `main.py`
-* `arms` is a list of number line configurations which is retrieved from one of our config files found in the directory
+* `arms` is a list of number line configurations which is retrieved from one of our config files found in the directory `Simulator/configs`
 * `bound` is the budget of arm pulls for the algorithm
 * `log_file` is a `FILE` object where all logs will be written to. 
 
 `lil_ucb.py` - implemented by Matthew
 
-this contains our implementation of lil'UCB.
+This contains our implementation of lil'UCB. `lil_ucb(students, arms, delta, epsilon, lambda_p, beta, sigma, log_file, max_pulls)` takes 9 arguments:
+* `students` is a list of student objects retrieved from the simulator in the `main.py`
+* `arms` is a list of number line configurations which is retrieved from one of our config files found in the directory `Simulator/configs`.
+* `delta` Parameters spefified on page 10 of lil'UCB paper as lil'UCB (+LS)
+* `epsilon` ''
+* `lamdba_p` ''
+* `beta` ''
+* `sigma` ''
+* `log_file` is a `FILE` object where all logs will be written to. 
+* `max_pulls` is the budget of arm pulls for the algorithm
 
 
 ##How to run
@@ -50,7 +59,9 @@ To run an experiment with epsilon-greedy we need `$alg = 0`, for our experiments
 Example run: `python main.py 0 logfile.log configs_base.in 0.1 100000`
 
 ###Running with lil'UCB
-To run an experiment with lil`UCB we need...
+To run an experiment with lil'UCB we need `$alg = 1`, and it takes no extra parameters.
+
+Example run: `python main.py 1 logfile.log config_base.in`
 
 ###Running with sequential halving
 To run an experiment with sequential halving we need `$alg = 2`, for our experiments we ran egreedy with the following extra parameters: `100000`, which uses an arm pull budget of 100000 pulls.
