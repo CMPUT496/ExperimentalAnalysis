@@ -6,7 +6,7 @@ Authored by: Tyler Wendlandt & Matthew Fritze
 
 `sim.py` contains all the code for the actual simulator portion of the project. It has the model for the line configurations, as well as the student configurations (which inherits from lineConfig). The `distance` function computes the distance between a line configuration and a student configuration, `probability` returns the probabiltity of succes for a student trying a problem, and `simulate` is the function which is called by algorithms to run a simulation of a student against a passed number line configuration.
 
-`main.py`
+`main.py` contains the code the run specific experiments. It starts by both setting up the log file with the appropriate header details, and reads the configurations. It is then broken up into 3 parts, one for each algorithm. Each part is largely the same, with some minor changes for algorithm-specefic details. In each algorithm, it initializes the arguments explicitly, to increase the ease of modification, then the algorithm is called and returns the best arm found, which is subsequently added to the logfile.
 
 
 ###Algorithms
